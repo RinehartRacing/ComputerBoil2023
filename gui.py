@@ -34,6 +34,9 @@ class GUI:
         self.temp_image = PhotoImage(file="thermometer.png").subsample(4, 4)
         image_label = ttk.Label(self.master, image=self.temp_image)
         image_label.grid(row=2, column=0)
+        self.master.grid_columnconfigure(0, weight=1)
+        self.master.grid_columnconfigure(1, weight=10)
+        self.master.grid_rowconfigure(0, weight= 10)
 
     def graph_display(self):
         graph_label = ttk.Label(self.master, text="Graph Here")
