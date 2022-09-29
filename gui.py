@@ -8,7 +8,7 @@
     Prasanna Raut
     Sean Brown
 """
-from tkinter import Canvas, Label, PhotoImage, Tk, ttk
+from tkinter import Canvas, PhotoImage, Tk, ttk
 
 
 class GUI:
