@@ -25,18 +25,23 @@ class GUI:
         self.sol_display()
         self.fluid_display()
         self.settings_display()
+        self.master.grid_columnconfigure(0, weight=1)
+        self.master.grid_columnconfigure(1, weight=10)
+        self.master.grid_rowconfigure(0, weight= 10)
 
     def temp_display(self):
         temp_label = ttk.Label(self.master, text="Temperature:")
         temp_label.grid(row=0, column=0)
         temp_value = ttk.Label(self.master, text="NULL")
         temp_value.grid(row=1, column=0)
-        self.temp_image = PhotoImage(file="thermometer.png").subsample(4, 4)
-        image_label = ttk.Label(self.master, image=self.temp_image)
-        image_label.grid(row=2, column=0)
-        self.master.grid_columnconfigure(0, weight=1)
-        self.master.grid_columnconfigure(1, weight=10)
-        self.master.grid_rowconfigure(0, weight= 10)
+        canvas = Canvas(self.master, width=100, height=100)
+        canvas.create_rectangle(40, 10, 60, 80, fill="white", width=0)
+        canvas.create_oval(35, 70, 65, 100, fill="red", width=0)
+        canvas.grid(row=2, column=0)
+        # self.temp_image = PhotoImage(file="thermometer.png").subsample(4, 4)
+        # image_label = ttk.Label(self.master, image=self.temp_image)
+        # image_label.grid(row=2, column=0)
+
 
     def graph_display(self):
         graph_label = ttk.Label(self.master, text="Graph Here")
