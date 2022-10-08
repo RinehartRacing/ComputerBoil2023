@@ -8,7 +8,9 @@
     Prasanna Raut
     Sean Brown
 """
+import math
 from tkinter import Canvas, PhotoImage, Tk, ttk
+import matplotlib
 
 
 class GUI:
@@ -21,6 +23,7 @@ class GUI:
 
         # Attributes
         self.temperature = None
+        self.pressure = None
 
         self.master.title("Let's Boil a Computer Again")
         self.temp_display()
@@ -91,11 +94,44 @@ class GUI:
     def press_display(self):
         press_label = ttk.Label(self.master, text="Pressure:")
         press_label.grid(row=0, column=3)
-        press_value = ttk.Label(self.master, text="NULL")
-        press_value.grid(row=1, column=3)
-        canvas = Canvas(self.master, width=100, height=100)
-        canvas.create_oval(25, 25, 75, 75)
-        canvas.grid(row=2, column=3)
+        self.press_value = ttk.Label(self.master, text="NULL")
+        self.press_value.grid(row=1, column=3)
+        self.press_canvas = Canvas(self.master, width=100, height=100)
+        # Create barometer
+        self.press_canvas.create_oval(25, 25, 75, 75, width=10, outline="gray")
+        self.press_canvas.create_arc(25, 25, 75, 75, start=135,
+                          extent=90, fill="green", width=0, outline="green")
+        self.press_canvas.create_arc(25, 25, 75, 75, start=45,
+                          extent=90, fill="yellow", width=0, outline="yellow")
+        self.press_canvas.create_arc(25, 25, 75, 75, start=315,
+                          extent=90, fill="red", width=0, outline="red")
+        self.press_canvas.create_arc(25, 25, 75, 75, start=225,
+                          extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+        self.press_canvas.grid(row=2, column=3)
+        self.press_canvas.create_oval(40, 40, 60, 60, width=10,
+                           outline="#d8d8d8", fill="#d8d8d8")
+        self.press_canvas.create_rectangle(45, 80, 55, 90, fill="gray", outline="gray")
+        # Create needle
+        needle_endpoint = self.needle_coords(225)
+        self.needle = self.press_canvas.create_line(50, 50, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
+        self.press_canvas.create_oval(45, 45, 55, 55, fill="blue", width=0)
+
+    def set_pressure(self, new_press):
+        """Sets the pressure and animates barometer accordingly"""
+        self.pressure = new_press
+        self.press_value.config(text = new_press)
+        new_press = abs(new_press)
+        needle_endpoint = self.needle_coords(new_press)
+        self.press_canvas.coords(self.needle, 50, 50, needle_endpoint[0], needle_endpoint[1])
+
+    def needle_coords(self, theta):
+        """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
+        # Needle length
+        needle_length = 20
+        alpha = math.radians(theta - 180)
+        delta_x = needle_length * math.cos(alpha)
+        delta_y = needle_length * math.sin(alpha)
+        return (50 - delta_x, 50 + delta_y)
 
     def sol_display(self):
         sol_label = ttk.Label(self.master, text="Solenoid:")

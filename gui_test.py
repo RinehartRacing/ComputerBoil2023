@@ -25,11 +25,18 @@ def test_temperature(gui):
             gui.set_temperature(i)
             input()
 
+def test_pressure(gui):
+    while True:
+        for i in range(0, 360):
+            gui.set_pressure(i)
+            input()
+
 
 def main():
     root = Tk()
     gui = GUI(root)
-    test_temperature(gui)
+    #test_temperature(gui)
+    test_pressure(gui)
     root.mainloop()
 
 
