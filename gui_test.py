@@ -27,8 +27,9 @@ def test_temperature(gui):
 
 def test_pressure(gui):
     while True:
-        for i in range(0, 360):
-            gui.set_pressure(i)
+        for i in range(-30, 30, 1):
+            print(i / 10.0)
+            gui.set_pressure(i / 10.0)
             input()
 
 

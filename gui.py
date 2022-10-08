@@ -121,7 +121,10 @@ class GUI:
         self.pressure = new_press
         self.press_value.config(text = new_press)
         new_press = abs(new_press)
-        needle_endpoint = self.needle_coords(new_press)
+        if new_press > 3:
+            new_press = 3
+        theta = 225 - (new_press / 3) * 270
+        needle_endpoint = self.needle_coords(theta)
         self.press_canvas.coords(self.needle, 50, 50, needle_endpoint[0], needle_endpoint[1])
 
     def needle_coords(self, theta):
