@@ -10,6 +10,7 @@
 """
 import math
 from tkinter import Canvas, PhotoImage, Tk, ttk
+from PIL import Image, ImageTk
 import matplotlib
 
 
@@ -100,32 +101,35 @@ class GUI:
         # Create barometer
         self.press_canvas.create_oval(25, 25, 75, 75, width=10, outline="gray")
         self.press_canvas.create_arc(25, 25, 75, 75, start=135,
-                          extent=90, fill="green", width=0, outline="green")
+                                     extent=90, fill="green", width=0, outline="green")
         self.press_canvas.create_arc(25, 25, 75, 75, start=45,
-                          extent=90, fill="yellow", width=0, outline="yellow")
+                                     extent=90, fill="yellow", width=0, outline="yellow")
         self.press_canvas.create_arc(25, 25, 75, 75, start=315,
-                          extent=90, fill="red", width=0, outline="red")
+                                     extent=90, fill="red", width=0, outline="red")
         self.press_canvas.create_arc(25, 25, 75, 75, start=225,
-                          extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+                                     extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
         self.press_canvas.grid(row=2, column=3)
         self.press_canvas.create_oval(40, 40, 60, 60, width=10,
-                           outline="#d8d8d8", fill="#d8d8d8")
-        self.press_canvas.create_rectangle(45, 80, 55, 90, fill="gray", outline="gray")
+                                      outline="#d8d8d8", fill="#d8d8d8")
+        self.press_canvas.create_rectangle(
+            45, 80, 55, 90, fill="gray", outline="gray")
         # Create needle
         needle_endpoint = self.needle_coords(225)
-        self.needle = self.press_canvas.create_line(50, 50, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
+        self.needle = self.press_canvas.create_line(
+            50, 50, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
         self.press_canvas.create_oval(45, 45, 55, 55, fill="blue", width=0)
 
     def set_pressure(self, new_press):
         """Sets the pressure and animates barometer accordingly"""
         self.pressure = new_press
-        self.press_value.config(text = new_press)
+        self.press_value.config(text=new_press)
         new_press = abs(new_press)
         if new_press > 3:
             new_press = 3
         theta = 225 - (new_press / 3) * 270
         needle_endpoint = self.needle_coords(theta)
-        self.press_canvas.coords(self.needle, 50, 50, needle_endpoint[0], needle_endpoint[1])
+        self.press_canvas.coords(
+            self.needle, 50, 50, needle_endpoint[0], needle_endpoint[1])
 
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
@@ -141,9 +145,19 @@ class GUI:
         sol_label.grid(row=3, column=0)
         sol_value = ttk.Label(self.master, text="NULL")
         sol_value.grid(row=3, column=1)
-        canvas = Canvas(self.master, width=100, height=100)
-        canvas.create_oval(25, 25, 75, 75)
-        canvas.grid(row=4, column=0)
+        image = Image.open("solenoid_off.png").resize((80, 80))
+        self.solenoid_image = ImageTk.PhotoImage(image)
+        self.sol_image_label = ttk.Label(image=self.solenoid_image)
+        self.sol_image_label.grid(row=4, column=0)
+        
+    def set_solenoid(self, new_sol):
+        self.solenoid = new_sol
+        if new_sol:
+            image = Image.open("solenoid.png").resize((80, 80))
+        else:
+            image = Image.open("solenoid_off.png").resize((80, 80))
+        self.solenoid_image = ImageTk.PhotoImage(image)
+        self.sol_image_label.config(image=self.solenoid_image)
 
     def fluid_display(self):
         fluid_label = ttk.Label(self.master, text="Fluid Level:")

@@ -32,12 +32,22 @@ def test_pressure(gui):
             gui.set_pressure(i / 10.0)
             input()
 
+def test_solenoid(gui):
+    while True:
+        gui.set_solenoid(True)
+        print("Solenoid On")
+        input()
+        gui.set_solenoid(False)
+        print("Solenoid Off")
+        input()
+
 
 def main():
     root = Tk()
     gui = GUI(root)
     #test_temperature(gui)
-    test_pressure(gui)
+    #test_pressure(gui)
+    test_solenoid(gui)
     root.mainloop()
 
 
