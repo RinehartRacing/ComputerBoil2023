@@ -143,8 +143,8 @@ class GUI:
     def sol_display(self):
         sol_label = ttk.Label(self.master, text="Solenoid:")
         sol_label.grid(row=3, column=0)
-        sol_value = ttk.Label(self.master, text="NULL")
-        sol_value.grid(row=3, column=1)
+        self.sol_value = ttk.Label(self.master, text="NULL")
+        self.sol_value.grid(row=3, column=1)
         image = Image.open("solenoid_off.png").resize((80, 80))
         self.solenoid_image = ImageTk.PhotoImage(image)
         self.sol_image_label = ttk.Label(image=self.solenoid_image)
@@ -154,8 +154,10 @@ class GUI:
         self.solenoid = new_sol
         if new_sol:
             image = Image.open("solenoid.png").resize((80, 80))
+            self.sol_value.config(text="Open")
         else:
             image = Image.open("solenoid_off.png").resize((80, 80))
+            self.sol_value.config(text="Closed")
         self.solenoid_image = ImageTk.PhotoImage(image)
         self.sol_image_label.config(image=self.solenoid_image)
 
