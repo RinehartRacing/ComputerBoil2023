@@ -9,9 +9,14 @@
     Sean Brown
 """
 import math
-from tkinter import Canvas, PhotoImage, Tk, ttk
+from tkinter import Button, Canvas, PhotoImage, Tk, ttk
 from PIL import Image, ImageTk
-import matplotlib
+from matplotlib.backend_bases import NavigationToolbar2
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg)
+import matplotlib.pyplot as plt
+import numpy as np  
 
 
 class GUI:
@@ -90,7 +95,30 @@ class GUI:
 
     def graph_display(self):
         graph_label = ttk.Label(self.master, text="Graph Here")
-        graph_label.grid(row=0, column=1, rowspan=3, columnspan=2)
+        graph_label.grid(row=0, column=0, rowspan=3, columnspan=3)
+        graph_figure = Figure(figsize = (5,1), dpi = 100)
+        x = np.linspace(0, 10*np.pi, 100)
+        y = np.sin(x)
+        graph_plot = graph_figure.add_subplot(111)
+        graph_plot.plot(y)
+        graph_canvas = FigureCanvasTkAgg(graph_figure, master = self.master)
+        graph_canvas.draw()
+
+        graph_canvas.get_tk_widget().grid(row = 0, column = 1, rowspan= 1, columnspan= 2)
+
+        
+        
+        # plt.ion()
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111)
+        # line1, = ax.plot(x, y, 'b-')
+        
+        # for phase in np.linspace(0, 10*np.pi, 100):
+        #     line1.set_ydata(np.sin(0.5 * x + phase))
+        #     fig.canvas.draw()
+        #     fig.canvas.flush_events()
+
+
 
     def press_display(self):
         press_label = ttk.Label(self.master, text="Pressure:")
@@ -179,6 +207,7 @@ def main():
     root = Tk()
     gui = GUI(root)
     root.mainloop()
+
 
 
 if __name__ == "__main__":
