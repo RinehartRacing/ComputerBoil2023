@@ -11,6 +11,12 @@ import math
 from tkinter import Canvas, Tk, ttk
 from PIL import Image, ImageTk
 from gui import GUI
+from matplotlib.backend_bases import NavigationToolbar2
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg)
+import matplotlib.pyplot as plt
+import numpy as np  
 
 
 class GUI:
@@ -68,8 +74,15 @@ class GUI:
         self.settings_frame.pack(side="left")
 
     def middle_bar(self):
-        graph_label = ttk.Label(self.middle_bar_frame, text="Graph Here")
-        graph_label.pack()
+        self.graph_figure = Figure(figsize = (5,1), dpi = 100)
+        self.x = np.linspace(0, 10*np.pi, 100)
+        self.y = np.sin(self.x)
+        self.graph_plot = self.graph_figure.add_subplot(111)
+        self.graph_plot.plot(self.y)
+        self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master = self.middle_bar_frame)
+        self.graph_canvas.draw()
+
+        self.graph_canvas.get_tk_widget().pack() #.grid(row = 0, column = 1, rowspan= 1, columnspan= 2)
 
     def bottom_bar(self):
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
