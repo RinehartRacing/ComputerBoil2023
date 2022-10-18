@@ -73,17 +73,8 @@ class GUI:
         self.settings_frame.pack(side="left")
 
     def middle_bar(self):
-        self.graph_figure = Figure(figsize=(5, 1), dpi=100)
-        self.x = np.linspace(0, 10*np.pi, 100)
-        self.y = np.sin(self.x)
-        self.graph_plot = self.graph_figure.add_subplot(111)
-        self.graph_plot.plot(self.y)
-        self.graph_canvas = FigureCanvasTkAgg(
-            self.graph_figure, master=self.middle_bar_frame)
-        self.graph_canvas.draw()
+        self.draw_graph()
 
-        # .grid(row = 0, column = 1, rowspan= 1, columnspan= 2)
-        self.graph_canvas.get_tk_widget().pack()
 
     def bottom_bar(self):
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
@@ -92,6 +83,21 @@ class GUI:
         self.draw_thermometer()
         self.pump_pressure_frame.pack(side="left")
         self.temp_frame.pack(side="left")
+
+    def draw_graph(self):
+        self.graph_figure = Figure(figsize=(5, 1), dpi=100)
+        self.x = np.linspace(0, 10*np.pi, 100)
+        self.y = np.sin(self.x)
+        self.y2 = np.cos(self.x)
+        self.temperature_plot = self.graph_figure.add_subplot(111)
+        self.pressure_plot = self.temperature_plot.twinx()
+        self.pressure_plot.plot(self.y)
+        self.temperature_plot.plot(self.y2)
+        self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
+        self.graph_canvas.draw()
+
+        # .grid(row = 0, column = 1, rowspan= 1, columnspan= 2)
+        self.graph_canvas.get_tk_widget().pack()
 
     def draw_pump_guage(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
