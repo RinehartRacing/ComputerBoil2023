@@ -24,14 +24,13 @@ def test_temperature(gui):
         for i in range(60, 20, -1):
             print(f"Temperature = {i}")
             gui.set_temperature(i)
-            gui.graph_display(i)
             input()
 
 def test_pressure(gui):
     while True:
         for i in range(-30, 30, 1):
             print(i / 10.0)
-            gui.set_pressure(i / 10.0)
+            gui.set_pump_pressure(i / 10.0)
             
             input()
 
@@ -58,7 +57,7 @@ def main():
     gui = GUI(root)
     #test_temperature(gui)
     test_pressure(gui)
-    test_solenoid(gui)
+    #test_solenoid(gui)
     root.mainloop()
 
 
