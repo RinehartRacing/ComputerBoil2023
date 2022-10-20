@@ -8,11 +8,11 @@ void loop() {
   for(int i = 20; i < 60; i++){
     Serial.println(String(i));
     Serial.flush();
-    delay(1000);
+    delay(100);
   }
   for(int i = 60; i > 20; i--){
     Serial.println(String(i));
     Serial.flush();
-    delay(1000);
+    delay(100);
   }
 }
