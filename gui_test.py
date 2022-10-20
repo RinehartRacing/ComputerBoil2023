@@ -11,6 +11,7 @@
 """
 from tkinter import Tk
 from gui import GUI
+import numpy as np
 
 
 
@@ -43,21 +44,20 @@ def test_solenoid(gui):
         print("Solenoid Off")
         input()
 
-# def test_graph(gui):
-#     while True:
-#         for i in range (0, 100, 1):
-#         gui.graph_display()
-#         print(i)
-#         input()
-
-
+def test_graph(gui):
+    while True:
+        for i in range (0, 100, 1):
+            gui.set_graph(np.sin(i), np.cos(i), i)
+            input()
+        
 
 def main():
     root = Tk()
     gui = GUI(root)
-    test_temperature(gui)
+    #test_temperature(gui)
     #test_pressure(gui)
     #test_solenoid(gui)
+    #test_graph(gui)
     root.mainloop()
 
 

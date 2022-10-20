@@ -8,14 +8,15 @@
     Sean Brown
 """
 import math
-from tkinter import Canvas, Tk, ttk
+from pydoc import tempfilepager
+from tkinter import TOP, Canvas, Tk, ttk
 from PIL import Image, ImageTk
-from matplotlib.backend_bases import NavigationToolbar2
+
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg)
+from matplotlib.backends.backend_tkagg import (NavigationToolbar2Tk, FigureCanvasTkAgg)
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 
 class GUI:
@@ -73,7 +74,9 @@ class GUI:
         self.settings_frame.pack(side="left")
 
     def middle_bar(self):
+        self.graph_frame = ttk.Frame(self.middle_bar_frame)
         self.draw_graph()
+        self.graph_frame.pack(side = "top")
 
 
     def bottom_bar(self):
@@ -85,19 +88,44 @@ class GUI:
         self.temp_frame.pack(side="left")
 
     def draw_graph(self):
-        self.graph_figure = Figure(figsize=(5, 1), dpi=100)
-        self.x = np.linspace(0, 10*np.pi, 100)
-        self.y = np.sin(self.x)
-        self.y2 = np.cos(self.x)
+        self.graph_figure = Figure(figsize=(7, 4), dpi=100)
         self.temperature_plot = self.graph_figure.add_subplot(111)
-        self.pressure_plot = self.temperature_plot.twinx()
-        self.pressure_plot.plot(self.y)
-        self.temperature_plot.plot(self.y2)
         self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
         self.graph_canvas.draw()
-
-        # .grid(row = 0, column = 1, rowspan= 1, columnspan= 2)
+        self.pressure_plot = self.temperature_plot.twinx()
+        self.xtime = []
+        self.pressure = []
+        self.temperature = []
+        self.pressure_plot.plot(self.xtime, self.temperature)
+        self.temperature_plot.plot(self.xtime, self.pressure)
         self.graph_canvas.get_tk_widget().pack()
+        self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
+        self.toolbar.update()
+        self.graph_canvas.get_tk_widget().pack()
+
+    def set_graph(self, newPressure, newTemperature, newTime):
+        self.xtime = self.xtime[-20:]
+        self.pressure = self.pressure[-20:]
+        self.temperature = self.temperature[-20:]
+
+        self.temperature.append(newTemperature)
+        self.pressure.append(newPressure)
+        self.xtime.append(newTime)
+        
+        self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
+        self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
+        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)
+
+        self.pressure_plot.set_ylabel("Temperature (°F)")
+        self.temperature_plot.set_ylabel("Pressure (Psi)")
+        self.temperature_plot.set_xlabel("Time (s)")
+
+        self.graph_canvas.draw()
+        self.graph_canvas.flush_events()
+        print(self.temperature)
+        print(self.pressure)
+        print(self.xtime)
+        time.sleep(0.05)
 
     def draw_pump_guage(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
