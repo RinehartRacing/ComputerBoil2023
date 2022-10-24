@@ -6,7 +6,6 @@
     Jesus Arias
     Prasanna Raut
     Sean Brown
-
     This file tests the functionality of the GUI via software
 """
 from tkinter import Tk
@@ -46,9 +45,11 @@ def test_solenoid(gui):
 
 def test_graph(gui):
     while True:
-        for i in range (0, 100, 1):
+        i = 0
+        while i < 100:
             gui.set_graph(np.sin(i), np.cos(i), i)
             input()
+            i += .25
         
 
 def main():
@@ -57,7 +58,7 @@ def main():
     #test_temperature(gui)
     #test_pressure(gui)
     #test_solenoid(gui)
-    #test_graph(gui)
+    test_graph(gui)
     root.mainloop()
 
 

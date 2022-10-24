@@ -7,9 +7,10 @@
     Prasanna Raut
     Sean Brown
 """
+from cProfile import label
 import math
 from pydoc import tempfilepager
-from tkinter import TOP, Canvas, Tk, ttk
+from tkinter import TOP, Canvas, Label, Tk, ttk
 from PIL import Image, ImageTk
 
 from matplotlib.figure import Figure
@@ -96,8 +97,9 @@ class GUI:
         self.xtime = []
         self.pressure = []
         self.temperature = []
-        self.pressure_plot.plot(self.xtime, self.temperature)
-        self.temperature_plot.plot(self.xtime, self.pressure)
+        self.pressure_plot.plot(self.xtime, self.pressure, color = "red", label = 'pressure')
+        self.temperature_plot.plot(self.xtime, self.temperature, color = "blue", label = 'temperature')
+        self.graph_figure.legend(loc = 'upper center')
         self.graph_canvas.get_tk_widget().pack()
         self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
         self.toolbar.update()
@@ -116,7 +118,7 @@ class GUI:
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
         self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)
 
-        self.pressure_plot.set_ylabel("Temperature (°F)")
+        self.pressure_plot.set_ylabel("Temperature (°C)")
         self.temperature_plot.set_ylabel("Pressure (Psi)")
         self.temperature_plot.set_xlabel("Time (s)")
 
