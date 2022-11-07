@@ -27,7 +27,6 @@ class GUI:
 
     def __init__(self, master):
         self.master = master
-
         # Attributes
         self.temperature = None
         self.pressure = None
@@ -41,11 +40,17 @@ class GUI:
         self.middle_bar_frame = ttk.Frame(self.master)
         self.bottom_bar_frame = ttk.Frame(self.master)
         self.top_bar_frame.pack()
-        self.middle_bar_frame.pack()
+        self.middle_bar_frame.pack(fill="x")
         self.bottom_bar_frame.pack()
         self.top_bar()
         self.middle_bar()
         self.bottom_bar()
+
+        # Set GUI to darkmode
+        style = ttk.Style()
+        self.master.configure(bg="black")
+        style.configure("TLabel", foreground="white", background="black")
+        style.configure("TFrame", background="black")
 
     def top_bar(self):
         self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
@@ -85,8 +90,8 @@ class GUI:
         self.temp_frame = ttk.Frame(self.bottom_bar_frame)
         self.draw_pump_guage()
         self.draw_thermometer()
-        self.pump_pressure_frame.pack(side="left")
-        self.temp_frame.pack(side="left")
+        self.pump_pressure_frame.pack(side="left", fill="both")
+        self.temp_frame.pack(side="left", fill="both")
 
     def draw_graph(self):
         self.graph_figure = Figure(figsize=(7, 4), dpi=100)
@@ -100,7 +105,7 @@ class GUI:
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red", label = 'pressure')
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue", label = 'temperature')
         self.graph_figure.legend(loc = 'upper center')
-        self.graph_canvas.get_tk_widget().pack()
+        self.graph_canvas.get_tk_widget().pack(fill="x")
         self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
         self.toolbar.update()
         self.graph_canvas.get_tk_widget().pack()
@@ -137,27 +142,29 @@ class GUI:
         self.press_value = ttk.Label(press_label_frame, text="NULL")
         self.press_value.pack(side="left")
         self.press_canvas = Canvas(
-            self.pump_pressure_frame, width=100, height=100)
+            self.pump_pressure_frame, width=200, height=200)
         # Create barometer
-        self.press_canvas.create_oval(25, 25, 75, 75, width=10, outline="gray")
-        self.press_canvas.create_arc(25, 25, 75, 75, start=135,
+        self.press_canvas.create_oval(50, 50, 150, 150, width=10, outline="gray")
+        self.press_canvas.create_arc(50, 50, 150, 150, start=135,
                                      extent=90, fill="green", width=0, outline="green")
-        self.press_canvas.create_arc(25, 25, 75, 75, start=45,
+        self.press_canvas.create_arc(50, 50, 150, 150, start=45,
                                      extent=90, fill="yellow", width=0, outline="yellow")
-        self.press_canvas.create_arc(25, 25, 75, 75, start=315,
+        self.press_canvas.create_arc(50, 50, 150, 150, start=315,
                                      extent=90, fill="red", width=0, outline="red")
-        self.press_canvas.create_arc(25, 25, 75, 75, start=225,
+        self.press_canvas.create_arc(50, 50, 150, 150, start=225,
                                      extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
         self.press_canvas.pack()
-        self.press_canvas.create_oval(40, 40, 60, 60, width=10,
+        self.press_canvas.create_oval(80, 80, 120, 120, width=10,
                                       outline="#d8d8d8", fill="#d8d8d8")
         self.press_canvas.create_rectangle(
-            45, 80, 55, 90, fill="gray", outline="gray")
+            90, 150, 110, 180, fill="gray", outline="gray")
         # Create needle
         needle_endpoint = self.needle_coords(225)
         self.needle = self.press_canvas.create_line(
-            50, 50, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
-        self.press_canvas.create_oval(45, 45, 55, 55, fill="blue", width=0)
+            100, 100, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
+        self.press_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
+        # Dark background
+        self.press_canvas.configure(bg="#302c2d")
 
     def set_pump_pressure(self, new_press):
         """Sets the pressure and animates barometer accordingly"""
@@ -169,22 +176,24 @@ class GUI:
         theta = 225 - (new_press / 3) * 270
         needle_endpoint = self.needle_coords(theta)
         self.press_canvas.coords(
-            self.needle, 50, 50, needle_endpoint[0], needle_endpoint[1])
+            self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
 
     def draw_thermometer(self):
         temp_label = ttk.Label(self.temp_frame, text="Temperature:")
         temp_label.pack()
         self.temp_value = ttk.Label(self.temp_frame, text="NULL")
         self.temp_value.pack()
-        self.therm_canvas = Canvas(self.temp_frame, width=100, height=100)
+        self.therm_canvas = Canvas(self.temp_frame, width=200, height=200)
         self.therm_canvas.create_rectangle(
-            40, 10, 60, 80, fill="white", width=0)
+            80, 20, 120, 160, fill="white", width=0)
         self.therm_circ = self.therm_canvas.create_oval(
-            35, 70, 65, 100, fill="black", width=0)
+            70, 140, 130, 200, fill="black", width=0)
         # Create rectangle that will change size
         self.therm_rect = self.therm_canvas.create_rectangle(
-            40, 70, 60, 80, fill="black", width=0)
+            80, 140, 120, 160, fill="black", width=0)
         self.therm_canvas.pack()
+         # Dark background
+        self.therm_canvas.configure(bg="#302c2d")
 
     def set_temperature(self, new_temp):
         """Sets the temperature and adjusts thermometer animation accordingly"""
@@ -197,18 +206,18 @@ class GUI:
         # Adjust temperature value on GUI
         self.temp_value.config(text=self.temperature)
         # Calculate height needed by rectangle to simulate where thermometer is
-        height = (new_temp - 20) * 1.5
+        height = (new_temp - 20) * 3
         # Update rectangle coordinates to change height
-        self.therm_canvas.coords(self.therm_rect, 40, 70 - height, 60, 80)
+        self.therm_canvas.coords(self.therm_rect, 80, 140 - height, 120, 160)
         # Get a scaled color shift value based on temperature
         # Get red value in hex
         color_shift = int(((new_temp - 20) / 40.0) * 255)
-        red = hex(color_shift)[2:]
+        green = hex(color_shift)[2:]
         # If statement needed to give leading zero to single digit hex value
-        if len(red) == 1:
-            red = "0" + red
-        # Green value won't change
-        green = "00"
+        if len(green) == 1:
+            green = "0" + green
+        # Red value won't change
+        red = "00"
         # Get blue value in hex
         blue = hex(255 - color_shift)[2:]
         # If statement needed to give leading zero to single digit hex value
@@ -217,7 +226,7 @@ class GUI:
         # Generate hex color
         new_color = f"#{red}{green}{blue}"
         print(new_color)
-        print(f"Red = {color_shift}, Blue = {255 - color_shift}")
+        print(f"Green = {color_shift}, Blue = {255 - color_shift}")
         # Update color
         self.therm_canvas.itemconfig(self.therm_rect, fill=new_color)
         self.therm_canvas.itemconfig(self.therm_circ, fill=new_color)
@@ -225,11 +234,11 @@ class GUI:
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
         # Needle length
-        needle_length = 20
+        needle_length = 40
         alpha = math.radians(theta - 180)
         delta_x = needle_length * math.cos(alpha)
         delta_y = needle_length * math.sin(alpha)
-        return (50 - delta_x, 50 + delta_y)
+        return (100 - delta_x, 100 + delta_y)
 
 
 def main():

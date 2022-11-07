@@ -48,14 +48,13 @@ def test_graph(gui):
         i = 0
         while i < 100:
             gui.set_graph(np.sin(i), np.cos(i), i)
-            input()
             i += .25
         
 
 def main():
     root = Tk()
     gui = GUI(root)
-    #test_temperature(gui)
+    test_temperature(gui)
     #test_pressure(gui)
     #test_solenoid(gui)
     test_graph(gui)

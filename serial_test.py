@@ -16,8 +16,8 @@ def test_temperature(gui, arduino):
     print("Hello")
     while True:
         value = read(arduino)
-        if value != "":
-            value = int(value)
+        if value != "" and value.replace('.', '', 1).isdigit():
+            value = float(value)
             print(f"Temperature = {value}")
             gui.set_temperature(value)
 
