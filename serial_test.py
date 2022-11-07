@@ -23,7 +23,8 @@ def test_temperature(gui, arduino):
 
 def main():
     ports = [comport.device for comport in serial.tools.list_ports.comports()]
-    arduino = serial.Serial(port="COM3", baudrate=9600, timeout=.1)
+    print(ports)
+    arduino = serial.Serial(port=ports[0], baudrate=9600, timeout=.1)
 
     root = Tk()
     gui = GUI(root)
