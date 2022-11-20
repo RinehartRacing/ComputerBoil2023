@@ -46,7 +46,7 @@ def test_solenoid(gui):
 def test_graph(gui):
     while True:
         i = 0
-        while i < 100:
+        while True:
             gui.set_graph(np.sin(i), np.cos(i), i)
             i += .25
         
@@ -54,7 +54,7 @@ def test_graph(gui):
 def main():
     root = Tk()
     gui = GUI(root)
-    test_temperature(gui)
+    #test_temperature(gui)
     #test_pressure(gui)
     #test_solenoid(gui)
     test_graph(gui)

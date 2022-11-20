@@ -94,7 +94,7 @@ class GUI:
         self.temp_frame.pack(side="left", fill="both")
 
     def draw_graph(self):
-        self.graph_figure = Figure(figsize=(7, 4), dpi=100)
+        self.graph_figure = Figure(figsize=(7, 4.7), dpi=100)
         self.temperature_plot = self.graph_figure.add_subplot(111)
         self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
         self.graph_canvas.draw()
@@ -104,11 +104,21 @@ class GUI:
         self.temperature = []
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red", label = 'pressure')
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue", label = 'temperature')
-        self.graph_figure.legend(loc = 'upper center')
+        self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Grey", edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
         self.graph_canvas.get_tk_widget().pack(fill="x")
-        self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
-        self.toolbar.update()
-        self.graph_canvas.get_tk_widget().pack()
+
+        self.graph_figure.set_facecolor("Grey")
+        self.temperature_plot.set_facecolor("Grey")
+
+
+        self.temperature_plot.tick_params(colors = 'White')
+        self.pressure_plot.tick_params(colors = "White")
+
+
+        ##self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
+
+        ##self.toolbar.update()
+        ##self.graph_canvas.get_tk_widget().pack()
 
     def set_graph(self, newPressure, newTemperature, newTime):
         self.xtime = self.xtime[-20:]
@@ -122,17 +132,18 @@ class GUI:
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
         self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)
+        
 
         self.pressure_plot.set_ylabel("Temperature (°C)")
         self.temperature_plot.set_ylabel("Pressure (Psi)")
         self.temperature_plot.set_xlabel("Time (s)")
+       
 
         self.graph_canvas.draw()
         self.graph_canvas.flush_events()
-        print(self.temperature)
         print(self.pressure)
         print(self.xtime)
-        time.sleep(0.05)
+        #time.sleep(0.05)
 
     def draw_pump_guage(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
