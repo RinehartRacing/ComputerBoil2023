@@ -1,6 +1,7 @@
 import threading
 import serial
 import time
+import sys
 import serial.tools.list_ports;
 from tkinter import Tk
 from gui import GUI
@@ -28,12 +29,16 @@ def test_graph(gui, arduino):
     i = 0
     while True:
         value = read(arduino)
-        #print(value)
-        if value != "" and value.replace('.', '', 1).isdigit():
-            value = float(value)
-            print(f"Temperature = {value}")
-            gui.set_graph(value, np.cos(i), i)
-            i += 1
+        if value != "":
+            line_split = value.split()
+            if line_split[0][1:].replace('.', '', 1).isdigit() and line_split[1][1:].replace('.', '', 1).isdigit():
+                temperature = float(line_split[0][1:])
+                pressure = float(line_split[1][1:])
+                # print(f"Temperature = {temperature}, Pressure = {pressure}")
+                gui.set_graph(temperature, pressure, i)
+                gui.set_temperature(temperature)
+                gui.set_pump_pressure(pressure)
+                i += 1
 
 def main():
     ports = [comport.device for comport in serial.tools.list_ports.comports()]

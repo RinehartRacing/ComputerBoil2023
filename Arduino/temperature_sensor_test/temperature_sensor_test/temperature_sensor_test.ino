@@ -35,7 +35,10 @@ void setup() {
   
 void loop() {
     // Serial.print("Temperature = ");
-    Serial.print(bmp.readTemperature());
+    //Serial.println(bmp.readRawPressure());
+    String data = "T" + String(bmp.readTemperature()) + " P" + String(bmp.readPressure() * 0.0001450377);
+    Serial.print(data);
+
     // Serial.println(" *C");
     
     // Serial.print("Pressure = ");

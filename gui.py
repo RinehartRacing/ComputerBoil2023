@@ -102,8 +102,8 @@ class GUI:
         self.xtime = []
         self.pressure = []
         self.temperature = []
-        self.pressure_plot.plot(self.xtime, self.pressure, color = "red", label = 'pressure')
-        self.temperature_plot.plot(self.xtime, self.temperature, color = "blue", label = 'temperature')
+        self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
+        self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
         self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Grey", edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
         self.graph_canvas.get_tk_widget().pack(fill="x")
 
@@ -136,13 +136,13 @@ class GUI:
 
         self.pressure_plot.set_ylabel("Temperature (°C)")
         self.temperature_plot.set_ylabel("Pressure (Psi)")
-        self.temperature_plot.set_xlabel("Time (s)")
+        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")
        
 
         self.graph_canvas.draw()
         self.graph_canvas.flush_events()
-        print(self.pressure)
-        print(self.xtime)
+        # print(self.pressure)
+        # print(self.xtime)
         #time.sleep(0.05)
 
     def draw_pump_guage(self):
@@ -179,7 +179,7 @@ class GUI:
 
     def set_pump_pressure(self, new_press):
         """Sets the pressure and animates barometer accordingly"""
-        self.pressure = new_press
+        # self.pressure = new_press
         self.press_value.config(text=new_press)
         new_press = abs(new_press)
         if new_press > 3:
@@ -208,14 +208,15 @@ class GUI:
 
     def set_temperature(self, new_temp):
         """Sets the temperature and adjusts thermometer animation accordingly"""
-        self.temperature = new_temp
-        # Temperatures only visually supported between 20 and 60
+        # self.temperature = new_temp
+        # Temperatures only visually supported between 20 and 
+    # Adjust temperature value on GUI
+        self.temp_value.config(text=new_temp)
         if new_temp < 20:
             new_temp = 20
         if new_temp > 60:
             new_temp = 60
-        # Adjust temperature value on GUI
-        self.temp_value.config(text=self.temperature)
+       
         # Calculate height needed by rectangle to simulate where thermometer is
         height = (new_temp - 20) * 3
         # Update rectangle coordinates to change height
@@ -236,8 +237,8 @@ class GUI:
             blue = "0" + blue
         # Generate hex color
         new_color = f"#{red}{green}{blue}"
-        print(new_color)
-        print(f"Green = {color_shift}, Blue = {255 - color_shift}")
+        # print(new_color)
+        # print(f"Green = {color_shift}, Blue = {255 - color_shift}")
         # Update color
         self.therm_canvas.itemconfig(self.therm_rect, fill=new_color)
         self.therm_canvas.itemconfig(self.therm_circ, fill=new_color)
