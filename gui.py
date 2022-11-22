@@ -88,7 +88,7 @@ class GUI:
     def bottom_bar(self):
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
         self.temp_frame = ttk.Frame(self.bottom_bar_frame)
-        self.draw_pump_guage()
+        self.draw_pump_gauge()
         self.draw_thermometer()
         self.pump_pressure_frame.pack(side="left", fill="both")
         self.temp_frame.pack(side="left", fill="both")
@@ -145,7 +145,7 @@ class GUI:
         # print(self.xtime)
         #time.sleep(0.05)
 
-    def draw_pump_guage(self):
+    def draw_pump_gauge(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
         press_label_frame.pack()
         press_label = ttk.Label(press_label_frame, text="Pressure:")
