@@ -94,56 +94,50 @@ class GUI:
         self.temp_frame.pack(side="left", fill="both")
 
     def draw_graph(self):
+        ##Creates a figure of size 700 by 470
         self.graph_figure = Figure(figsize=(7, 4.7), dpi=100)
+        ##Creates a plot for temperature by adding the plot as a subplot to the figure
         self.temperature_plot = self.graph_figure.add_subplot(111)
+        #Adds the figure to the middle bar frame of the tkInter window.
         self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
         self.graph_canvas.draw()
+        ##Creates a twin axis for the temperature and pressure plots so they have the same x-axis but different y-axis
         self.pressure_plot = self.temperature_plot.twinx()
+        #Creates arrays for data storage for time elapsed, pressure, and temperature
         self.xtime = []
         self.pressure = []
         self.temperature = []
+        ##Plots the two plots for temperature and pressure. Red plot for Temperature and Blue plot for Pressure.
         self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
         self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
+        ##Creates a legend for easy identification of both plots
         self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Grey", edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
         self.graph_canvas.get_tk_widget().pack(fill="x")
-
+        ##Sets the background colors for the plots to be grey for dark mode aesthetic
         self.graph_figure.set_facecolor("Grey")
         self.temperature_plot.set_facecolor("Grey")
-
-
         self.temperature_plot.tick_params(colors = 'White')
         self.pressure_plot.tick_params(colors = "White")
 
-
-        ##self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
-
-        ##self.toolbar.update()
-        ##self.graph_canvas.get_tk_widget().pack()
-
     def set_graph(self, newPressure, newTemperature, newTime):
+        ##Allows for appending of new data to the graph but only displays the last 20 data points for easy of graph use and non-cluttering of display
         self.xtime = self.xtime[-20:]
         self.pressure = self.pressure[-20:]
         self.temperature = self.temperature[-20:]
-
         self.temperature.append(newTemperature)
         self.pressure.append(newPressure)
-        self.xtime.append(newTime)
-        
+        self.xtime.append(newTime)       
+        ##Plots the temperature and pressure with the correct x axis.
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
-        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)
-        
-
+        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)      
+        ##Sets the label and units for y-axis and x-axis of graph
         self.pressure_plot.set_ylabel("Temperature (°C)")
         self.temperature_plot.set_ylabel("Pressure (Psi)")
-        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")
-       
-
+        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")      
+        ##Deletes and redraws the graph so that the graph looks animated and incoming data is reflected as soon as its collected.
         self.graph_canvas.draw()
         self.graph_canvas.flush_events()
-        # print(self.pressure)
-        # print(self.xtime)
-        #time.sleep(0.05)
 
     def draw_pump_gauge(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
