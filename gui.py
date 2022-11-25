@@ -12,7 +12,6 @@ import math
 from pydoc import tempfilepager
 from tkinter import TOP, Canvas, Label, Tk, ttk
 from PIL import Image, ImageTk
-from matplotlib import colors
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (NavigationToolbar2Tk, FigureCanvasTkAgg)
@@ -87,80 +86,77 @@ class GUI:
 
 
     def bottom_bar(self):
-        self.flow_rate_frame = ttk.Frame(self.bottom_bar_frame)
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
         self.temp_frame = ttk.Frame(self.bottom_bar_frame)
-        
-        self.draw_flow_rate()
         self.draw_pump_gauge()
         self.draw_thermometer()
-
-        self.flow_rate_frame.pack(side="left", fill = "both")
         self.pump_pressure_frame.pack(side="left", fill="both")
         self.temp_frame.pack(side="left", fill="both")
-        
 
     def draw_graph(self):
-        with plt.rc_context({'axes.edgecolor':'white'}):
-            ##Creates a figure of size 700 by 470
-            self.graph_figure = Figure(figsize=(7, 4.7), dpi=100)
-            ##Creates a plot for temperature by adding the plot as a subplot to the figure
-            self.temperature_plot = self.graph_figure.add_subplot(111)
-            #Adds the figure to the middle bar frame of the tkInter window.
-            self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
-            self.graph_canvas.draw()
-            ##Creates a twin axis for the temperature and pressure plots so they have the same x-axis but different y-axis
-            self.pressure_plot = self.temperature_plot.twinx()
-            #Creates arrays for data storage for time elapsed, pressure, and temperature
-            self.xtime = []
-            self.pressure = []
-            self.temperature = []
-            ##Plots the two plots for temperature and pressure. Red plot for Temperature and Blue plot for Pressure.
-            self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
-            self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
-            ##Creates a legend for easy identification of both plots
-            self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Black", 
-                edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
-            for text in self.leg.get_texts():
-                text.set_color("white")
-            self.graph_canvas.get_tk_widget().pack(fill="x")
-            ##Sets the background colors for the plots to be grey for dark mode aesthetic
-            self.graph_figure.set_facecolor("Black")
-            self.temperature_plot.set_facecolor("Black")
-            self.temperature_plot.tick_params(axis = "y",colors = "Red")
-            self.pressure_plot.tick_params(axis = "y", colors = "Blue")
-            self.temperature_plot.tick_params(axis = "x", colors = "White")
+        self.graph_figure = Figure(figsize=(7, 4.7), dpi=100)
+        self.temperature_plot = self.graph_figure.add_subplot(111)
+        self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
+
+        self.graph_canvas.draw()
+
+        self.pressure_plot = self.temperature_plot.twinx()
+
+        self.xtime = []
+        self.pressure = []
+        self.temperature = []
+
+        self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
+        self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
         
+        self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Grey", edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
+        self.graph_canvas.get_tk_widget().pack(fill="x")
+
+        self.graph_figure.set_facecolor("Grey")
+        self.temperature_plot.set_facecolor("Grey")
+
+
+        self.temperature_plot.tick_params(colors = 'White')
+        self.pressure_plot.tick_params(colors = "White")
+
+
+        ##self.toolbar = NavigationToolbar2Tk(self.graph_canvas)
+
+        ##self.toolbar.update()
+        ##self.graph_canvas.get_tk_widget().pack()
 
     def set_graph(self, newPressure, newTemperature, newTime):
-        ##Allows for appending of new data to the graph but only displays the last 20 data points 
-        # for easy of graph use and non-cluttering of display
         self.xtime = self.xtime[-20:]
         self.pressure = self.pressure[-20:]
         self.temperature = self.temperature[-20:]
+
         self.temperature.append(newTemperature)
         self.pressure.append(newPressure)
-        self.xtime.append(newTime)       
-        ##Plots the temperature and pressure with the correct x axis.
+        self.xtime.append(newTime)
+        
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
-        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)      
-        ##Sets the label and units for y-axis and x-axis of graph
+        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)
+        
+
         self.pressure_plot.set_ylabel("Temperature (°C)")
         self.temperature_plot.set_ylabel("Pressure (Psi)")
-        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")      
-        ##Deletes and redraws the graph so that the graph looks animated and incoming data 
-        #is reflected as soon as its collected.
+        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")
+       
+
         self.graph_canvas.draw()
         self.graph_canvas.flush_events()
+        # print(self.pressure)
+        # print(self.xtime)
+        #time.sleep(0.05)
 
     def draw_pump_gauge(self):
         press_label_frame = ttk.Frame(self.pump_pressure_frame)
         press_label_frame.pack()
         press_label = ttk.Label(press_label_frame, text="Pressure:")
-        press_label.pack()
+        press_label.pack(side="left")
         self.press_value = ttk.Label(press_label_frame, text="NULL")
-        self.press_value.pack()
+        self.press_value.pack(side="left")
         self.press_canvas = Canvas(
             self.pump_pressure_frame, width=200, height=200)
         # Create barometer
@@ -197,18 +193,6 @@ class GUI:
         needle_endpoint = self.needle_coords(theta)
         self.press_canvas.coords(
             self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
-    
-    def draw_flow_rate(self):
-        temp_label = ttk.Label(self.temp_frame, text = "Flow Rate:")
-        temp_label.pack()
-        self.temp_value = ttk.Label(self.temp_frame, text="NULL")
-        self.temp_value.pack()
-        self.flowrate_canvas = Canvas(self.temp_frame, width = 200, height = 200)
-        self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
-        self.flowrate_canvas.pack()
-        
-        self.flowrate_canvas.configure(bg="#302c2d")
-
 
     def draw_thermometer(self):
         temp_label = ttk.Label(self.temp_frame, text="Temperature:")
