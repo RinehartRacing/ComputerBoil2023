@@ -7,18 +7,23 @@
     Prasanna Raut
     Sean Brown
 """
+#Dark Mode Hex Colors
+#18191a background black
+#242526 card medium black/grey
+#3a3b3c hover card dark grey
+#e4e6eb primary text white
+#bob3b8 secondary text light grey
+
 from cProfile import label
 import math
 from pydoc import tempfilepager
 from tkinter import TOP, Canvas, Label, Tk, ttk
 from PIL import Image, ImageTk
-from matplotlib import colors
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (NavigationToolbar2Tk, FigureCanvasTkAgg)
 import matplotlib.pyplot as plt
 import numpy as np
-import time
 
 
 class GUI:
@@ -49,9 +54,9 @@ class GUI:
 
         # Set GUI to darkmode
         style = ttk.Style()
-        self.master.configure(bg="black")
-        style.configure("TLabel", foreground="white", background="black")
-        style.configure("TFrame", background="black")
+        self.master.configure(bg="#18191A")
+        style.configure("TLabel", foreground="#e4e6eb", background="#242526")
+        style.configure("TFrame", background="#242526")
 
     def top_bar(self):
         self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
@@ -101,7 +106,7 @@ class GUI:
         
 
     def draw_graph(self):
-        with plt.rc_context({'axes.edgecolor':'white'}):
+        with plt.rc_context({'axes.edgecolor':'#B0B3B8'}):
             ##Creates a figure of size 700 by 470
             self.graph_figure = Figure(figsize=(7, 4.7), dpi=100)
             ##Creates a plot for temperature by adding the plot as a subplot to the figure
@@ -119,17 +124,21 @@ class GUI:
             self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
             self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
             ##Creates a legend for easy identification of both plots
-            self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "Black", 
-                edgecolor = "Black", bbox_to_anchor = (.115, 1.0))
+            self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "#18191A", 
+                edgecolor = "#242526", bbox_to_anchor = (.115, 1.0))
             for text in self.leg.get_texts():
-                text.set_color("white")
+                text.set_color("#e4e6eb")
             self.graph_canvas.get_tk_widget().pack(fill="x")
             ##Sets the background colors for the plots to be grey for dark mode aesthetic
-            self.graph_figure.set_facecolor("Black")
-            self.temperature_plot.set_facecolor("Black")
+            self.graph_figure.set_facecolor("#242526")
+            self.temperature_plot.set_facecolor("#242526")
             self.temperature_plot.tick_params(axis = "y",colors = "Red")
             self.pressure_plot.tick_params(axis = "y", colors = "Blue")
-            self.temperature_plot.tick_params(axis = "x", colors = "White")
+            self.temperature_plot.tick_params(axis = "x", colors = "#e4e6eb")
+            ##Sets the label and units for y-axis and x-axis of graph
+            self.pressure_plot.set_ylabel("Temperature (°C)", color = "#E4E6EB")
+            self.temperature_plot.set_ylabel("Pressure (Psi)", color = "#E4E6EB")
+            self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")    
         
 
     def set_graph(self, newPressure, newTemperature, newTime):
@@ -146,9 +155,9 @@ class GUI:
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
         self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)      
         ##Sets the label and units for y-axis and x-axis of graph
-        self.pressure_plot.set_ylabel("Temperature (°C)")
-        self.temperature_plot.set_ylabel("Pressure (Psi)")
-        self.temperature_plot.set_xlabel("Time Samples at 10 Hz")      
+        self.pressure_plot.set_ylabel("Temperature (°C)", color = "#E4E6EB")
+        self.temperature_plot.set_ylabel("Pressure (Psi)", color = "#E4E6EB")
+        self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")      
         ##Deletes and redraws the graph so that the graph looks animated and incoming data 
         #is reflected as soon as its collected.
         self.graph_canvas.draw()
@@ -217,12 +226,12 @@ class GUI:
         self.temp_value.pack()
         self.therm_canvas = Canvas(self.temp_frame, width=200, height=200)
         self.therm_canvas.create_rectangle(
-            80, 20, 120, 160, fill="white", width=0)
+            80, 20, 120, 160, fill="#e4e6eb", width=0)
         self.therm_circ = self.therm_canvas.create_oval(
-            70, 140, 130, 200, fill="black", width=0)
+            70, 140, 130, 200, fill="#18191A", width=0)
         # Create rectangle that will change size
         self.therm_rect = self.therm_canvas.create_rectangle(
-            80, 140, 120, 160, fill="black", width=0)
+            80, 140, 120, 160, fill="#18191A", width=0)
         self.therm_canvas.pack()
          # Dark background
         self.therm_canvas.configure(bg="#302c2d")
