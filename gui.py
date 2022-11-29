@@ -57,6 +57,7 @@ class GUI:
         self.master.configure(bg="#18191A")
         style.configure("TLabel", foreground="#e4e6eb", background="#242526")
         style.configure("TFrame", background="#242526")
+        style.configure("TButton", background= "#242526")
 
     def top_bar(self):
         self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
@@ -78,6 +79,7 @@ class GUI:
         self.title_bar.pack(side="left")
 
         self.settings_frame = ttk.Frame(self.top_bar_frame)
+            
         image = Image.open("settings.png").resize((64, 64))
         self.settings_image = ImageTk.PhotoImage(image)
         self.settings_image_label = ttk.Button(
@@ -96,7 +98,7 @@ class GUI:
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
         self.temp_frame = ttk.Frame(self.bottom_bar_frame)
         
-        self.draw_flow_rate()
+        ##self.draw_flow_rate()
         self.draw_pump_gauge()
         self.draw_thermometer()
 
@@ -124,7 +126,7 @@ class GUI:
             self.pressure_plot.plot(self.xtime, self.pressure, color = "blue", label = 'pressure')
             self.temperature_plot.plot(self.xtime, self.temperature, color = "red", label = 'temperature')
             ##Creates a legend for easy identification of both plots
-            self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "#18191A", 
+            self.leg = self.graph_figure.legend(loc = 'upper left', facecolor = "#242526", 
                 edgecolor = "#242526", bbox_to_anchor = (.115, 1.0))
             for text in self.leg.get_texts():
                 text.set_color("#e4e6eb")
@@ -132,12 +134,12 @@ class GUI:
             ##Sets the background colors for the plots to be grey for dark mode aesthetic
             self.graph_figure.set_facecolor("#242526")
             self.temperature_plot.set_facecolor("#242526")
-            self.temperature_plot.tick_params(axis = "y",colors = "Red")
-            self.pressure_plot.tick_params(axis = "y", colors = "Blue")
+            self.temperature_plot.tick_params(axis = "y",colors = "Blue")
+            self.pressure_plot.tick_params(axis = "y", colors = "Red")
             self.temperature_plot.tick_params(axis = "x", colors = "#e4e6eb")
             ##Sets the label and units for y-axis and x-axis of graph
-            self.pressure_plot.set_ylabel("Temperature (°C)", color = "#E4E6EB")
-            self.temperature_plot.set_ylabel("Pressure (Psi)", color = "#E4E6EB")
+            self.pressure_plot.set_ylabel("Temperature (°C)", color = "Red")
+            self.temperature_plot.set_ylabel("Pressure (Psi)", color = "Blue")
             self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")    
         
 
@@ -153,10 +155,10 @@ class GUI:
         ##Plots the temperature and pressure with the correct x axis.
         self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
         self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
-        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1)      
+        self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1) 
         ##Sets the label and units for y-axis and x-axis of graph
-        self.pressure_plot.set_ylabel("Temperature (°C)", color = "#E4E6EB")
-        self.temperature_plot.set_ylabel("Pressure (Psi)", color = "#E4E6EB")
+        self.pressure_plot.set_ylabel("Temperature (°C)", color = 'Red')
+        self.temperature_plot.set_ylabel("Pressure (Psi)", color = "blue")
         self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")      
         ##Deletes and redraws the graph so that the graph looks animated and incoming data 
         #is reflected as soon as its collected.
