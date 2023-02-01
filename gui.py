@@ -98,7 +98,7 @@ class GUI:
         self.pump_pressure_frame = ttk.Frame(self.bottom_bar_frame)
         self.temp_frame = ttk.Frame(self.bottom_bar_frame)
         
-        ##self.draw_flow_rate()
+        self.draw_flow_rate()
         self.draw_pump_gauge()
         self.draw_thermometer()
 
@@ -288,6 +288,7 @@ class GUI:
 def main():
     root = Tk()
     gui = GUI(root)
+    root.state('zoomed')
     root.mainloop()
 
 
