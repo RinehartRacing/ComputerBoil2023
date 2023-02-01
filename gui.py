@@ -209,21 +209,11 @@ class GUI:
         self.press_canvas.coords(
             self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
     
-    def draw_flow_rate(self):
-        temp_label = ttk.Label(self.temp_frame, text = "Flow Rate:")
-        temp_label.pack()
-        self.temp_value = ttk.Label(self.temp_frame, text="NULL")
-        self.temp_value.pack()
-        self.flowrate_canvas = Canvas(self.temp_frame, width = 200, height = 200)
-        self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
-        self.flowrate_canvas.pack()
-        
-        self.flowrate_canvas.configure(bg="#302c2d")
-
-
     def draw_thermometer(self):
-        temp_label = ttk.Label(self.temp_frame, text="Temperature:")
-        temp_label.pack()
+        self.temp_label_frame = ttk.Frame(self.temp_frame)
+        self.temp_label_frame.pack()
+        self.temp_label = ttk.Label(self.temp_label_frame, text="Temperature:")
+        self.temp_label.pack()
         self.temp_value = ttk.Label(self.temp_frame, text="NULL")
         self.temp_value.pack()
         self.therm_canvas = Canvas(self.temp_frame, width=200, height=200)
@@ -274,6 +264,21 @@ class GUI:
         # Update color
         self.therm_canvas.itemconfig(self.therm_rect, fill=new_color)
         self.therm_canvas.itemconfig(self.therm_circ, fill=new_color)
+
+    def draw_flow_rate(self):
+        
+        self.flow_rate_label_frame = ttk.Frame(self.flow_rate_frame)
+        self.flow_rate_label_frame.pack()
+        self.flow_rate_label = ttk.Label(self.flow_rate_label_frame, text = "Flow Rate:")
+        self.flow_rate_label.pack()
+        self.flow_rate_value = ttk.Label(self.flow_rate_frame, text = "NULL")
+        self.flow_rate_value.pack()
+        self.flowrate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200)
+        self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
+        self.flowrate_canvas.pack()
+        
+        self.flowrate_canvas.configure(bg="#302c2d")
+
 
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
