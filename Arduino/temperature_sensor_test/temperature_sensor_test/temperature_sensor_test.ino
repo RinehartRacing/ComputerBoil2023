@@ -23,46 +23,54 @@
 // EOC is not used, it signifies an end of conversion
 // XCLR is a reset pin, also not used here
 
-Adafruit_BMP085 bmp;
-  
+Adafruit_BMP085 bmp1(0x70);
+Adafruit_BMP085 bmp2(0x77);
+
 void setup() {
   Serial.begin(9600);
-  if (!bmp.begin()) {
-	Serial.println("Could not find a valid BMP085 sensor, check wiring!");
-	while (1) {}
+  delay(1000);
+  while (1) {
+    if (bmp2.begin() && bmp1.begin()) {
+
+      break;
+    }
+    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
   }
 }
-  
+
 void loop() {
-    // Serial.print("Temperature = ");
-    //Serial.println(bmp.readRawPressure());
-    String data = "T" + String(bmp.readTemperature()) + " P" + String(bmp.readPressure() * 0.0001450377);
-    Serial.print(data);
+  // Serial.print("Temperature = ");
+  //Serial.println(bmp.readRawPressure());
+  String data1 = "T1 " + String(bmp1.readTemperature()) + " P1 " + String(bmp1.readPressure() * 0.0001450377);
+  Serial.print(data1 + " ");
+  delay(100);
 
-    // Serial.println(" *C");
-    
-    // Serial.print("Pressure = ");
-    // Serial.print(bmp.readPressure());
-    // Serial.println(" Pa");
-    
-    // // Calculate altitude assuming 'standard' barometric
-    // // pressure of 1013.25 millibar = 101325 Pascal
-    // Serial.print("Altitude = ");
-    // Serial.print(bmp.readAltitude());
-    // Serial.println(" meters");
+  String data2 = "T2 " + String(bmp2.readTemperature()) + " P2 " + String(bmp2.readPressure() * 0.0001450377);
+  Serial.println(data2);
+  delay(100);
+  // Serial.println(" *C");
 
-    // Serial.print("Pressure at sealevel (calculated) = ");
-    // Serial.print(bmp.readSealevelPressure());
-    // Serial.println(" Pa");
+  // Serial.print("Pressure = ");
+  // Serial.print(bmp.readPressure());
+  // Serial.println(" Pa");
+
+  // // Calculate altitude assuming 'standard' barometric
+  // // pressure of 1013.25 millibar = 101325 Pascal
+  // Serial.print("Altitude = ");
+  // Serial.print(bmp.readAltitude());
+  // Serial.println(" meters");
+
+  // Serial.print("Pressure at sealevel (calculated) = ");
+  // Serial.print(bmp.readSealevelPressure());
+  // Serial.println(" Pa");
 
   // you can get a more precise measurement of altitude
   // if you know the current sea level pressure which will
   // vary with weather and such. If it is 1015 millibars
   // that is equal to 101500 Pascals.
-    // Serial.print("Real altitude = ");
-    // Serial.print(bmp.readAltitude(101500));
-    // Serial.println(" meters");
-    
-    // Serial.println();
-    delay(100);
+  // Serial.print("Real altitude = ");
+  // Serial.print(bmp.readAltitude(101500));
+  // Serial.println(" meters");
+
+  // Serial.println();
 }
