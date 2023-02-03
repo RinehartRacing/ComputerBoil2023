@@ -69,7 +69,7 @@ class GUI:
         self.fluid_level_frame.pack(side="left")
 
         self.title_bar = ttk.Frame(self.top_bar_frame)
-        image = Image.open("koolance.jpg").resize((172, 49))
+        image = Image.open("koolance.png").resize((172, 49))
         self.koolance_image = ImageTk.PhotoImage(image)
         self.koolance_label = ttk.Label(self.title_bar, text="Koolance")
         self.koolance_image_label = ttk.Label(
@@ -206,7 +206,7 @@ class GUI:
             new_press = 3
         theta = 225 - (new_press / 3) * 270
         needle_endpoint = self.needle_coords(theta)
-        self.press_canvas.coords(
+        self.flow_rate_canvas.coords(
             self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
     
     def draw_thermometer(self):
@@ -266,19 +266,43 @@ class GUI:
         self.therm_canvas.itemconfig(self.therm_circ, fill=new_color)
 
     def draw_flow_rate(self):
-        
+        #Creating the box for 
         self.flow_rate_label_frame = ttk.Frame(self.flow_rate_frame)
         self.flow_rate_label_frame.pack()
         self.flow_rate_label = ttk.Label(self.flow_rate_label_frame, text = "Flow Rate:")
         self.flow_rate_label.pack()
         self.flow_rate_value = ttk.Label(self.flow_rate_frame, text = "NULL")
         self.flow_rate_value.pack()
-        self.flowrate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200)
-        self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
-        self.flowrate_canvas.pack()
+        self.flow_rate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200)
+        #self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
+        self.flow_rate_canvas.pack()
         
-        self.flowrate_canvas.configure(bg="#302c2d")
+        self.flow_rate_canvas.configure(bg="#302c2d")
 
+        # Create barometer
+        self.flow_rate_canvas.create_oval(50, 50, 150, 150, width=10, outline="grey")
+        self.flow_rate_canvas.create_arc(50, 50, 150, 150, start=135,
+                                     extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+        self.flow_rate_canvas.create_arc(50, 50, 150, 150, start=45,
+                                     extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+        self.flow_rate_canvas.create_arc(50, 50, 150, 150, start=315,
+                                     extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+        self.flow_rate_canvas.create_arc(50, 50, 150, 150, start=225,
+                                    extent=90, fill="#d8d8d8", width=0, outline="#d8d8d8")
+        self.flow_rate_canvas.pack()
+        self.flow_rate_canvas.create_oval(80, 80, 120, 120, width=10,
+                                      outline="#d8d8d8", fill="#d8d8d8")
+        self.flow_rate_canvas.create_rectangle(
+            90, 150, 110, 180, fill="gray", outline="gray")
+        # Create needle
+        self.needle_endpoint = self.needle_coords(225)
+        self.needle = self.flow_rate_canvas.create_line(
+            100, 100, self.needle_endpoint[0], self.needle_endpoint[1], fill="blue", width=3)
+        self.flow_rate_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
+        # Dark background
+        self.flow_rate_canvas.configure(bg="#302c2d")
+  #  def set_flow_rate(self, new_pressure): 
+        
 
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
