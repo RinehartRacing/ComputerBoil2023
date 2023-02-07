@@ -55,9 +55,9 @@ def main():
     root = Tk()
     gui = GUI(root)
     #test_temperature(gui)
-    #test_pressure(gui)
+    test_pressure(gui)
     #test_solenoid(gui)
-    test_graph(gui)
+    #test_graph(gui)
     root.mainloop()
 
 
