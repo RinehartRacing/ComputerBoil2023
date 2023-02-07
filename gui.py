@@ -294,6 +294,16 @@ class GUI:
                                       outline="#d8d8d8", fill="#d8d8d8")
         self.flow_rate_canvas.create_rectangle(
             90, 150, 110, 180, fill="gray", outline="gray")
+
+        #Drawing the lines on the flow rate gauge
+        self.flow_rate_canvas.create_line(100, 60, 100, 50, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(60, 100, 50, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(140, 100, 150, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 73, 65, 65, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 127, 135, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
+
         # Create needle
         self.needle_endpoint = self.needle_coords(225)
         self.needle = self.flow_rate_canvas.create_line(
