@@ -165,11 +165,11 @@ class GUI:
         self.graph_canvas.flush_events()
 
     def draw_pump_gauge(self):
-        self.press_label_frame = ttk.Frame(self.pump_pressure_frame)
-        self.press_label_frame.pack()
-        self.press_label = ttk.Label(self.press_label_frame, text="Pressure:")
-        self.press_label.pack()
-        self.press_value = ttk.Label(self.press_label_frame, text="NULL")
+        press_label_frame = ttk.Frame(self.pump_pressure_frame)
+        press_label_frame.pack()
+        press_label = ttk.Label(press_label_frame, text="Pressure:")
+        press_label.pack()
+        self.press_value = ttk.Label(press_label_frame, text="NULL")
         self.press_value.pack()
         self.press_canvas = Canvas(
             self.pump_pressure_frame, width=200, height=200)
@@ -189,24 +189,24 @@ class GUI:
         self.press_canvas.create_rectangle(
             90, 150, 110, 180, fill="gray", outline="gray")
         # Create needle
-        self.needle_endpoint = self.needle_coords(225)
+        needle_endpoint = self.needle_coords(225)
         self.needle = self.press_canvas.create_line(
-            100, 100, self.needle_endpoint[0], self.needle_endpoint[1], fill="blue", width=3)
+            100, 100, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
         self.press_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
         # Dark background
         self.press_canvas.configure(bg="#302c2d")
 
     def set_pump_pressure(self, new_press):
         """Sets the pressure and animates barometer accordingly"""
-        self.pressure = new_press
+        # self.pressure = new_press
         self.press_value.config(text=new_press)
         new_press = abs(new_press)
         if new_press > 3:
             new_press = 3
-        self.theta = 225 - (new_press / 3) * 270
-        self.needle_endpoint = self.needle_coords(self.theta)
-        self.press_canvas.coords(
-            self.needle, 100, 100, self.needle_endpoint[0], self.needle_endpoint[1])
+        theta = 225 - (new_press / 3) * 270
+        needle_endpoint = self.needle_coords(theta)
+        self.flow_rate_canvas.coords(
+            self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
     
     def draw_thermometer(self):
         self.temp_label_frame = ttk.Frame(self.temp_frame)
@@ -293,6 +293,16 @@ class GUI:
                                       outline="#d8d8d8", fill="#d8d8d8")
         self.flow_rate_canvas.create_rectangle(
             90, 150, 110, 180, fill="gray", outline="gray")
+
+        #Drawing the lines on the flow rate gauge
+        self.flow_rate_canvas.create_line(100, 60, 100, 50, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(60, 100, 50, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(140, 100, 150, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 73, 65, 65, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 127, 135, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
+
         # Create needle
         self.needle_endpoint = self.needle_coords(225)
         self.needle = self.flow_rate_canvas.create_line(
@@ -300,26 +310,17 @@ class GUI:
         self.flow_rate_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
         # Dark background
         self.flow_rate_canvas.configure(bg="#302c2d")
-    def set_flow_rate(self, new_rate):
-        "Sets the flow rate of the gauge accordingly" 
-        self.rate = new_rate
-        self.flow_rate_value.config(text = new_rate)
-        new_rate = abs(new_rate)
-        self.theta = 225 - (new_rate / 3) * 270
-        self.needle_endpoint = self.needle_coords(self.theta)
-        #self.
-        
-
+  #  def set_flow_rate(self, new_pressure): 
         
 
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
         # Needle length
-        self.needle_length = 40
-        self.alpha = math.radians(theta - 180)
-        self.delta_x = self.needle_length * math.cos(self.alpha)
-        self.delta_y = self.needle_length * math.sin(self.alpha)
-        return (100 - self.delta_x, 100 + self.delta_y)
+        needle_length = 40
+        alpha = math.radians(theta - 180)
+        delta_x = needle_length * math.cos(alpha)
+        delta_y = needle_length * math.sin(alpha)
+        return (100 - delta_x, 100 + delta_y)
 
 
 def main():
