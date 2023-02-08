@@ -34,6 +34,13 @@ def test_pressure(gui):
             
             input()
 
+def test_flowrate(gui):
+    while True:
+        for i in range(0,100,1):
+            print(i/10)
+            gui.set_flow_rate(i/10)
+            input()
+
 def test_solenoid(gui):
     while True:
         gui.set_solenoid(True)
@@ -55,9 +62,10 @@ def main():
     root = Tk()
     gui = GUI(root)
     #test_temperature(gui)
-    test_pressure(gui)
+    #test_pressure(gui)
     #test_solenoid(gui)
     #test_graph(gui)
+    test_flowrate(gui)
     root.mainloop()
 
 

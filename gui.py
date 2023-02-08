@@ -82,7 +82,7 @@ class GUI:
         image = Image.open("settings.png").resize((64, 64))
         self.settings_image = ImageTk.PhotoImage(image)
         self.settings_image_label = ttk.Button(
-            self.settings_frame, image=self.settings_image)
+            self.settings_frame, image=self.settings_image, borderwidth=0, highlightthickness=0)
         self.settings_image_label.pack()
         self.settings_frame.pack(side="left")
 
@@ -205,7 +205,7 @@ class GUI:
             new_press = 3
         theta = 225 - (new_press / 3) * 270
         needle_endpoint = self.needle_coords(theta)
-        self.flow_rate_canvas.coords(
+        self.press_canvas.coords(
             self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
     
     def draw_thermometer(self):
@@ -298,10 +298,24 @@ class GUI:
         self.needle = self.flow_rate_canvas.create_line(
             100, 100, self.needle_endpoint[0], self.needle_endpoint[1], fill="blue", width=3)
         self.flow_rate_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
+
+        # Creating the tick marks on the flowrate gauge
+        self.flow_rate_canvas.create_line(100, 60, 100, 50, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(60, 100, 50, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(140, 100, 150, 100, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 73, 65, 65, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 127, 135, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
+        self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
         # Dark background
         self.flow_rate_canvas.configure(bg="#302c2d")
-  #  def set_flow_rate(self, new_pressure): 
-        
+    def set_flow_rate(self, new_rate): 
+        #self.flow_rate = new_rate
+        self.flow_rate_value.config(text = new_rate)
+        new_rate = abs(new_rate)
+        self.theta = 225 - (new_rate / 3) * 270
+        self.needle_endpoint = self.needle_coords(self.theta)
+        self.flow_rate_canvas.coords(self.needle,100,100, self.needle_endpoint[0], self.needle_endpoint[1])
 
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
