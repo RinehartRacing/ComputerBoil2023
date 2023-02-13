@@ -17,7 +17,7 @@
 from cProfile import label
 import math
 from pydoc import tempfilepager
-from tkinter import TOP, Canvas, Label, Tk, ttk
+from tkinter import TOP, Canvas, Label, Tk, ttk, Button
 from PIL import Image, ImageTk
 
 from matplotlib.figure import Figure
@@ -53,38 +53,20 @@ class GUI:
         self.bottom_bar()
 
         # Set GUI to darkmode
-        style = ttk.Style()
+        style = ttk.Style() 
         self.master.configure(bg="#18191A")
         style.configure("TLabel", foreground="#e4e6eb", background="#242526")
-        style.configure("TFrame", background="#242526")
-        style.configure("TButton", background= "#242526")
+        style.configure("TFrame", background="#242526", )
+        style.configure("TButton", padding =-1)
 
     def top_bar(self):
-        self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
-        fluid_level_label = ttk.Label(
-            self.fluid_level_frame, text="Fluid Level: ")
-        self.fluid_level_value = ttk.Label(self.fluid_level_frame, text="NULL")
-        fluid_level_label.pack()
-        self.fluid_level_value.pack()
-        self.fluid_level_frame.pack(side="left")
+        self.draw_fluid_level()
 
-        self.title_bar = ttk.Frame(self.top_bar_frame)
-        image = Image.open("koolance.png").resize((172, 49))
-        self.koolance_image = ImageTk.PhotoImage(image)
-        self.koolance_label = ttk.Label(self.title_bar, text="Koolance")
-        self.koolance_image_label = ttk.Label(
-            self.title_bar, image=self.koolance_image)
-        self.koolance_label.pack(side="left")
-        self.koolance_image_label.pack(side="left")
-        self.title_bar.pack(side="left")
+        self.draw_koolance()
 
-        self.settings_frame = ttk.Frame(self.top_bar_frame)
-        image = Image.open("settings.png").resize((64, 64))
-        self.settings_image = ImageTk.PhotoImage(image)
-        self.settings_image_label = ttk.Button(
-            self.settings_frame, image=self.settings_image, borderwidth=0, highlightthickness=0)
-        self.settings_image_label.pack()
-        self.settings_frame.pack(side="left")
+        
+        self.draw_settings()
+        
 
     def middle_bar(self):
         self.graph_frame = ttk.Frame(self.middle_bar_frame)
@@ -104,6 +86,37 @@ class GUI:
         self.flow_rate_frame.pack(side="left", fill = "both")
         self.pump_pressure_frame.pack(side="left", fill="both")
         self.temp_frame.pack(side="left", fill="both")
+
+    def draw_koolance(self):
+        self.title_bar = ttk.Frame(self.top_bar_frame)
+        image = Image.open("koolance.png").resize((172, 49))
+        self.koolance_image = ImageTk.PhotoImage(image)
+        self.koolance_label = ttk.Label(self.title_bar)
+        self.koolance_image_label = ttk.Label(
+            self.title_bar, image=self.koolance_image)
+        self.koolance_label.pack(side="left")
+        self.koolance_image_label.pack(side="left")
+        self.title_bar.pack(side="left")
+
+    def draw_settings(self):
+        self.settings_frame = ttk.Frame(self.top_bar_frame, style = "TFrame")
+        image = Image.open("settings.png").resize((64, 64))
+        self.settings_image = ImageTk.PhotoImage(image)
+        self.settings_image_label = Button(
+            self.settings_frame, image = self.settings_image, borderwidth= 0, highlightthickness=0)
+        #     ##Above fix the image, apparently its about the borderwidth and height thickness or something. figure out the method
+        #     #for a ttk button
+        self.settings_image_label.pack()
+        self.settings_frame.pack(side="left")
+
+    def draw_fluid_level(self):
+        self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
+        fluid_level_label = ttk.Label(
+            self.fluid_level_frame, text="Fluid Level: ")
+        self.fluid_level_value = ttk.Label(self.fluid_level_frame, text="NULL")
+        fluid_level_label.pack()
+        self.fluid_level_value.pack()
+        self.fluid_level_frame.pack(side="left")
         
 
     def draw_graph(self):
