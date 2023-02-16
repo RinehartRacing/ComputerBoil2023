@@ -17,7 +17,7 @@
 from cProfile import label
 import math
 from pydoc import tempfilepager
-from tkinter import TOP, Canvas, Label, Tk, ttk, Button
+from tkinter import TOP, Canvas, Tk, ttk, Button, Frame, Toplevel
 from PIL import Image, ImageTk
 
 from matplotlib.figure import Figure
@@ -51,20 +51,17 @@ class GUI:
         self.top_bar()
         self.middle_bar()
         self.bottom_bar()
-
+        #Colors foreground="#e4e6eb", background="#242526"
         # Set GUI to darkmode
         style = ttk.Style() 
         self.master.configure(bg="#18191A")
-        style.configure("TLabel", foreground="#e4e6eb", background="#242526")
-        style.configure("TFrame", background="#242526", )
+        style.configure("TLabel", foreground="#e4e6eb", background="#18191A")
+        style.configure("TFrame", background="#18191A", foreground="blue" )
         style.configure("TButton", padding =-1)
 
     def top_bar(self):
         self.draw_fluid_level()
-
         self.draw_koolance()
-
-        
         self.draw_settings()
         
 
@@ -99,15 +96,23 @@ class GUI:
         self.title_bar.pack(side="left")
 
     def draw_settings(self):
-        self.settings_frame = ttk.Frame(self.top_bar_frame, style = "TFrame")
+        self.settings_frame = Frame(self.top_bar_frame)
         image = Image.open("settings.png").resize((64, 64))
         self.settings_image = ImageTk.PhotoImage(image)
         self.settings_image_label = Button(
-            self.settings_frame, image = self.settings_image, borderwidth= 0, highlightthickness=0)
+            self.settings_frame, command=self.open_popup, image = self.settings_image, borderwidth= 0, highlightthickness=0, background= "#18191A", foreground= "#18191A")
         #     ##Above fix the image, apparently its about the borderwidth and height thickness or something. figure out the method
         #     #for a ttk button
         self.settings_image_label.pack()
         self.settings_frame.pack(side="left")
+    
+    def open_popup(self):
+       top = Toplevel()
+       top.geometry("750x250")
+       popup_label = ttk.Label()
+       
+
+
 
     def draw_fluid_level(self):
         self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
@@ -185,7 +190,7 @@ class GUI:
         self.press_value = ttk.Label(press_label_frame, text="NULL")
         self.press_value.pack()
         self.press_canvas = Canvas(
-            self.pump_pressure_frame, width=200, height=200)
+            self.pump_pressure_frame, width=200, height=200, borderwidth= 0, highlightthickness=0)
         # Create barometer
         self.press_canvas.create_oval(50, 50, 150, 150, width=10, outline="gray")
         self.press_canvas.create_arc(50, 50, 150, 150, start=135,
@@ -207,7 +212,7 @@ class GUI:
             100, 100, needle_endpoint[0], needle_endpoint[1], fill="blue", width=3)
         self.press_canvas.create_oval(90, 90, 110, 110, fill="blue", width=0)
         # Dark background
-        self.press_canvas.configure(bg="#302c2d")
+        self.press_canvas.configure(bg="#18191A")
 
     def set_pump_pressure(self, new_press):
         """Sets the pressure and animates barometer accordingly"""
@@ -222,23 +227,23 @@ class GUI:
             self.needle, 100, 100, needle_endpoint[0], needle_endpoint[1])
     
     def draw_thermometer(self):
-        self.temp_label_frame = ttk.Frame(self.temp_frame)
+        self.temp_label_frame = Frame(self.temp_frame)
         self.temp_label_frame.pack()
         self.temp_label = ttk.Label(self.temp_label_frame, text="Temperature:")
         self.temp_label.pack()
         self.temp_value = ttk.Label(self.temp_frame, text="NULL")
         self.temp_value.pack()
-        self.therm_canvas = Canvas(self.temp_frame, width=200, height=200)
+        self.therm_canvas = Canvas(self.temp_frame, width=200, height=200, borderwidth= 0, highlightthickness=0)
         self.therm_canvas.create_rectangle(
             80, 20, 120, 160, fill="#e4e6eb", width=0)
         self.therm_circ = self.therm_canvas.create_oval(
-            70, 140, 130, 200, fill="#18191A", width=0)
+            70, 140, 130, 200, fill="blue", width=0)
         # Create rectangle that will change size
         self.therm_rect = self.therm_canvas.create_rectangle(
-            80, 140, 120, 160, fill="#18191A", width=0)
+            80, 140, 120, 160, fill="blue", width=0)
         self.therm_canvas.pack()
          # Dark background
-        self.therm_canvas.configure(bg="#302c2d")
+        self.therm_canvas.configure(bg="#18191A")
 
     def set_temperature(self, new_temp):
         """Sets the temperature and adjusts thermometer animation accordingly"""
@@ -285,7 +290,7 @@ class GUI:
         self.flow_rate_label.pack()
         self.flow_rate_value = ttk.Label(self.flow_rate_frame, text = "NULL")
         self.flow_rate_value.pack()
-        self.flow_rate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200)
+        self.flow_rate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200, highlightthickness= 0, borderwidth=0, background="grey")
         #self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
         self.flow_rate_canvas.pack()
         
@@ -321,7 +326,7 @@ class GUI:
         self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
         # Dark background
-        self.flow_rate_canvas.configure(bg="#302c2d")
+        self.flow_rate_canvas.configure(bg="#18191A")
     def set_flow_rate(self, new_rate): 
         #self.flow_rate = new_rate
         self.flow_rate_value.config(text = new_rate)
