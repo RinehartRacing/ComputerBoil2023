@@ -316,7 +316,6 @@ class GUI:
         self.flow_rate_canvas = Canvas(self.flow_rate_frame, width = 200, height = 200, highlightthickness= 0, borderwidth=0, background="grey")
         #self.flowrate_canvas.create_rectangle(80, 20, 120, 160, fill="#302c2d", width=0)
         self.flow_rate_canvas.pack()
-        
         self.flow_rate_canvas.configure(bg="#302c2d")
 
         # Create barometer
@@ -348,7 +347,7 @@ class GUI:
         self.flow_rate_canvas.create_line(127, 127, 135, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
-        # Creating the numbers by the tick marks on the flowrate gauge
+        # Creating the numbers by the tick marks on the flowrate gauge change as necessary
         self.flow_rate_canvas.create_text(78, 122, text="1") #done
         self.flow_rate_canvas.create_text(65, 100, text="2") #done
         self.flow_rate_canvas.create_text(78, 78, text="3") #done
@@ -356,9 +355,9 @@ class GUI:
         self.flow_rate_canvas.create_text(122, 78, text="5") #done
         self.flow_rate_canvas.create_text(135, 100, text="6") #done
         self.flow_rate_canvas.create_text(122, 122, text="7") #done
-
         # Dark background
         self.flow_rate_canvas.configure(bg="#18191A")
+        
     def set_flow_rate(self, new_rate): 
         #self.flow_rate = new_rate
         self.flow_rate_value.config(text = new_rate)
