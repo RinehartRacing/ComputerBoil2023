@@ -17,7 +17,7 @@
 from cProfile import label
 import math
 from pydoc import tempfilepager
-from tkinter import TOP, Canvas, Tk, ttk, Button, Frame, Toplevel
+from tkinter import Canvas, Tk, ttk, Button, Frame, Toplevel
 from PIL import Image, ImageTk
 
 from matplotlib.figure import Figure
@@ -25,6 +25,25 @@ from matplotlib.backends.backend_tkagg import (NavigationToolbar2Tk, FigureCanva
 import matplotlib.pyplot as plt
 import numpy as np
 
+class VerticalNavigationToolbar2Tk(NavigationToolbar2Tk):
+        def __init__(self, canvas, window):
+            super().__init__(canvas, window, pack_toolbar=True)
+
+        # override _Button() to re-pack the toolbar button in vertical direction
+        def _Button(self, text, image_file, toggle, command):
+            b = super()._Button(text, image_file, toggle, command)
+            b.pack(side="top") # re-pack button in vertical direction
+            return b
+
+        # override _Spacer() to create vertical separator
+        def _Spacer(self):
+            s = ttk.Frame(self, width=30, relief= "sunken", padding=20)
+            s.pack(side="top", pady=10, padx=5) # pack in vertical direction
+            return s
+
+        # disable showing mouse position in toolbar
+        def set_message(self, s):
+            pass
 
 class GUI:
     """
@@ -111,9 +130,6 @@ class GUI:
        top.geometry("750x250")
        popup_label = ttk.Label()
        
-
-
-
     def draw_fluid_level(self):
         self.fluid_level_frame = ttk.Frame(self.top_bar_frame)
         fluid_level_label = ttk.Label(
@@ -122,7 +138,6 @@ class GUI:
         fluid_level_label.pack()
         self.fluid_level_value.pack()
         self.fluid_level_frame.pack(side="left")
-        
 
     def draw_graph(self):
         with plt.rc_context({'axes.edgecolor':'#B0B3B8'}):
@@ -133,6 +148,13 @@ class GUI:
             #Adds the figure to the middle bar frame of the tkInter window.
             self.graph_canvas = FigureCanvasTkAgg(self.graph_figure, master=self.middle_bar_frame)
             self.graph_canvas.draw()
+            #create toolbar frame
+            self.toolbar_frame = ttk.Frame(self.middle_bar_frame)
+            #creates the vertical navigationtoolbar2tk
+            self.toolbar = VerticalNavigationToolbar2Tk(self.graph_canvas, self.toolbar_frame)
+            self.toolbar.update()
+            self.toolbar.pack(side="left", fill="both")
+            self.toolbar_frame.pack(side="left", fill="y")
             ##Creates a twin axis for the temperature and pressure plots so they have the same x-axis but different y-axis
             self.pressure_plot = self.temperature_plot.twinx()
             #Creates arrays for data storage for time elapsed, pressure, and temperature
@@ -147,7 +169,7 @@ class GUI:
                 edgecolor = "#242526", bbox_to_anchor = (.115, 1.0))
             for text in self.leg.get_texts():
                 text.set_color("#e4e6eb")
-            self.graph_canvas.get_tk_widget().pack(fill="x")
+            self.graph_canvas.get_tk_widget().pack(fill="both",expand=True)
             ##Sets the background colors for the plots to be grey for dark mode aesthetic
             self.graph_figure.set_facecolor("#242526")
             self.temperature_plot.set_facecolor("#242526")
@@ -157,7 +179,8 @@ class GUI:
             ##Sets the label and units for y-axis and x-axis of graph
             self.pressure_plot.set_ylabel("Temperature (°C)", color = "Red")
             self.temperature_plot.set_ylabel("Pressure (Psi)", color = "Blue")
-            self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")    
+            self.temperature_plot.set_xlabel("Time (s)", color = "#E4E6EB")
+            self.temperature_plot.set_title("Lets Boil a Computer, Again!", color = "#ffffff",  fontsize = 30, fontweight = 20)
         
 
     def set_graph(self, newPressure, newTemperature, newTime):
@@ -325,6 +348,15 @@ class GUI:
         self.flow_rate_canvas.create_line(127, 127, 135, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
+        # Creating the numbers by the tick marks on the flowrate gauge
+        self.flow_rate_canvas.create_text(78, 122, text="1") #done
+        self.flow_rate_canvas.create_text(65, 100, text="2") #done
+        self.flow_rate_canvas.create_text(78, 78, text="3") #done
+        self.flow_rate_canvas.create_text(100, 70, text="4") #done
+        self.flow_rate_canvas.create_text(122, 78, text="5") #done
+        self.flow_rate_canvas.create_text(135, 100, text="6") #done
+        self.flow_rate_canvas.create_text(122, 122, text="7") #done
+
         # Dark background
         self.flow_rate_canvas.configure(bg="#18191A")
     def set_flow_rate(self, new_rate): 
