@@ -15,4 +15,4 @@ while True:
     line = ser.readline()
     line = line.decode("utf-8") #ser.readline returns a binary, convert to string
     print(line)
-    output_file.write(f"{datetime.now()} {line}")
+    # output_file.write(f"{datetime.now()} {line}")
