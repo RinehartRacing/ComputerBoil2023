@@ -366,6 +366,9 @@ class GUI:
         self.needle_endpoint = self.needle_coords(self.theta)
         self.flow_rate_canvas.coords(self.needle,100,100, self.needle_endpoint[0], self.needle_endpoint[1])
 
+    def set_fluid_level(self, new_level):
+        self.fluid_level_value.config(text = new_level)
+
     def needle_coords(self, theta):
         """Given an angle (degrees), calculates coordinates of endpoint of line of needle"""
         # Needle length

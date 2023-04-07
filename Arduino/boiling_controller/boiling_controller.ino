@@ -95,6 +95,8 @@ void loop() {
   Serial.print("PO ");
   Serial.println(pressure2);
   Serial.flush();
+  Serial.print("PD ");
+  Serial.println(pressure1 - pressure2);
   // Read Flow Rate
   // Serial.println("Reading Flow Rate");
   if((millis() - oldTime) > 1000)    // Only process counters once per second
@@ -152,7 +154,7 @@ void loop() {
   //   digitalWrite(pumpRelay, LOW);
   // }
   testBool = !testBool;
-Serial.println("");  
-  delay(1000);
+// Serial.println("");  
+  // delay(1000);
 
 }
