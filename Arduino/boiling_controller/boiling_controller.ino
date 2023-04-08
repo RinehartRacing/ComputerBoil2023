@@ -1,6 +1,5 @@
 #include <Adafruit_BMP085.h>
 #include <Wire.h>
-
 #define FLUIDPIN A0
 Adafruit_BMP085 bmp1;
 Adafruit_BMP085 bmp2;
@@ -75,28 +74,21 @@ void loop() {
   // Serial.println("Reading Temperature");
   TCA9548A(0);
   // delay(1000);
+  String packet = "";
   temperature1 = bmp1.readTemperature();
-  Serial.print("T ");
-  Serial.println(temperature1);
-  Serial.flush();
+  packet += "T " + (String)temperature1 + " ";
   // Read inside pressure
   // Serial.println("Reading Inside Pressure");
   bmp1.begin();
   pressure1 = bmp1.readPressure() * 0.0001450377;   //Pressure of BMP180 Sensor 1
-  Serial.print("PI ");
-  Serial.println(pressure1);
-  Serial.flush();
+  packet += "PI " + (String)pressure1 + " ";
   // Read outside pressure
   // Serial.println("Reading Outside Pressure");
   TCA9548A(2);
   // delay(1000);
   bmp2.begin();
-  pressure2 = bmp2.readPressure() * 0.0001450377;   //Pressure of BMP180 Sensor 2 
-  Serial.print("PO ");
-  Serial.println(pressure2);
-  Serial.flush();
-  Serial.print("PD ");
-  Serial.println(pressure1 - pressure2);
+  pressure2 = bmp2.readPressure() * 0.0001450377;   //Pressure of BMP180 Sensor 2
+  packet += "PO " + (String)pressure2;
   // Read Flow Rate
   // Serial.println("Reading Flow Rate");
   if((millis() - oldTime) > 1000)    // Only process counters once per second
@@ -118,19 +110,18 @@ void loop() {
   //Start the math
   // flowRate = (flowRate * 60) / 3785.412;         //Convert seconds to minutes, and ml to gallons
   //Flow rate is in gallons per minute
-  Serial.print("FR ");
-  Serial.println(flowRate);         //Print the variable flowRate to Serial
-  Serial.flush();
+  Serial.println(packet);
+
+
   // Read Fluid Level
   // Serial.println("Reading Fluid Level");
   float reading;
   float length;
   reading = analogRead(FLUIDPIN);
   length = (reading - YINT) / SLOPE;
-  Serial.print("FL "); 
-  Serial.println(length);
-  Serial.flush();
-
+  packet = "FR " + String(flowRate, 2) + " ";
+  packet += "FL " + (String)length;
+  Serial.println(packet);
   if((pressure1 - pressure2) > 2.5){
     digitalWrite(solenoidRelay, HIGH);
   }
