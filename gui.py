@@ -19,6 +19,7 @@ import math
 from pydoc import tempfilepager
 from tkinter import Canvas, Tk, ttk, Button, Frame, Toplevel
 from PIL import Image, ImageTk
+from settings import Settings
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (NavigationToolbar2Tk, FigureCanvasTkAgg)
@@ -50,8 +51,9 @@ class GUI:
         This class holds all GUI information
     """
 
-    def __init__(self, master):
+    def __init__(self, master, control):
         self.master = master
+        self.control = control
         # Attributes
         self.temperature = None
         self.pressure = None
@@ -79,6 +81,7 @@ class GUI:
         style.configure("TButton", padding =-1)
 
     def top_bar(self):
+        self.draw_filter()
         self.draw_fluid_level()
         self.draw_koolance()
         self.draw_settings()
@@ -88,7 +91,6 @@ class GUI:
         self.graph_frame = ttk.Frame(self.middle_bar_frame)
         self.draw_graph()
         self.graph_frame.pack(side = "top")
-
 
     def bottom_bar(self):
         self.flow_rate_frame = ttk.Frame(self.bottom_bar_frame)
@@ -103,6 +105,24 @@ class GUI:
         self.pump_pressure_frame.pack(side="left", fill="both")
         self.temp_frame.pack(side="left", fill="both")
 
+    def draw_filter(self):
+        self.filter_frame = Frame(self.top_bar_frame)
+        image = Image.open("filter.png").resize((64, 64))
+        self.filter_image = ImageTk.PhotoImage(image)
+        self.filter_image_label = Button(
+            self.filter_frame, command=self.toggle_pump, image = self.filter_image, borderwidth= 0, highlightthickness=0, background= "#18191A", foreground= "#18191A")
+        #     ##Above fix the image, apparently its about the borderwidth and height thickness or something. figure out the method
+        #     #for a ttk button
+        self.filter_image_label.pack()
+        self.filter_frame.pack(side="left")
+
+    def toggle_pump(self):
+        print("Toggling pump")
+        self.control.toggle_override()
+        self.control.toggle_pump()
+
+    def apply_settings(self, time_start, time_duration):
+        self.control.apply_settings(time_start, time_duration)
     def draw_koolance(self):
         self.title_bar = ttk.Frame(self.top_bar_frame)
         image = Image.open("koolance.png").resize((172, 49))
@@ -126,7 +146,9 @@ class GUI:
         self.settings_frame.pack(side="left")
     
     def open_popup(self):
+       
        top = Toplevel()
+       self.settings = Settings(top, self)
        top.geometry("750x250")
        popup_label = ttk.Label()
        
