@@ -403,7 +403,8 @@ class GUI:
 
 def main():
     root = Tk()
-    gui = GUI(root)
+    control = None
+    gui = GUI(root, control)
     root.state('zoomed')
     root.mainloop()
 
