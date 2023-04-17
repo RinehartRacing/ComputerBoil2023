@@ -96,7 +96,7 @@ void loop() {
   TCA9548A(2);
   // delay(1000);
   bmp2.begin();
-  pressure2 = bmp2.readPressure() * 0.0001450377;  //Pressure of BMP180 Sensor 2
+  pressure2 = bmp2.readPressure() * 0.0001450377 - 0.04;  //Pressure of BMP180 Sensor 2
   packet += "PO " + (String)pressure2 + " ";
   // Read Flow Rate
   // Serial.println("Reading Flow Rate");
