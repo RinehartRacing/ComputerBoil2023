@@ -370,13 +370,13 @@ class GUI:
         self.flow_rate_canvas.create_line(73, 127, 65, 135, fill = "Black", width=3)
         self.flow_rate_canvas.create_line(127, 73, 135, 65, fill = "Black", width=3)
         # Creating the numbers by the tick marks on the flowrate gauge change as necessary
-        self.flow_rate_canvas.create_text(78, 122, text="1") #done
-        self.flow_rate_canvas.create_text(65, 100, text="2") #done
-        self.flow_rate_canvas.create_text(78, 78, text="3") #done
-        self.flow_rate_canvas.create_text(100, 70, text="4") #done
-        self.flow_rate_canvas.create_text(122, 78, text="5") #done
-        self.flow_rate_canvas.create_text(135, 100, text="6") #done
-        self.flow_rate_canvas.create_text(122, 122, text="7") #done
+        self.flow_rate_canvas.create_text(78, 122, text="0") #done
+        self.flow_rate_canvas.create_text(65, 100, text="1") #done
+        self.flow_rate_canvas.create_text(78, 78, text="2") #done
+        self.flow_rate_canvas.create_text(100, 70, text="3") #done
+        self.flow_rate_canvas.create_text(122, 78, text="4") #done
+        self.flow_rate_canvas.create_text(135, 100, text="5") #done
+        self.flow_rate_canvas.create_text(122, 122, text="6") #done
         # Dark background
         self.flow_rate_canvas.configure(bg="#18191A")
         
@@ -384,7 +384,7 @@ class GUI:
         #self.flow_rate = new_rate
         self.flow_rate_value.config(text = new_rate)
         new_rate = abs(new_rate)
-        self.theta = 225 - (new_rate / 3) * 270
+        self.theta = 225 - (new_rate / 6) * 270
         self.needle_endpoint = self.needle_coords(self.theta)
         self.flow_rate_canvas.coords(self.needle,100,100, self.needle_endpoint[0], self.needle_endpoint[1])
 
