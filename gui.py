@@ -125,7 +125,7 @@ class GUI:
         self.control.apply_settings(time_start, time_duration)
     def draw_koolance(self):
         self.title_bar = ttk.Frame(self.top_bar_frame)
-        image = Image.open("koolance.png").resize((172, 49))
+        image = Image.open("koolance-off.png").resize((172, 49))
         self.koolance_image = ImageTk.PhotoImage(image)
         self.koolance_label = ttk.Label(self.title_bar)
         self.koolance_image_label = ttk.Label(
@@ -195,12 +195,12 @@ class GUI:
             ##Sets the background colors for the plots to be grey for dark mode aesthetic
             self.graph_figure.set_facecolor("#242526")
             self.temperature_plot.set_facecolor("#242526")
-            self.temperature_plot.tick_params(axis = "y",colors = "Blue")
-            self.pressure_plot.tick_params(axis = "y", colors = "Red")
+            self.temperature_plot.tick_params(axis = "y",colors = "Red")
+            self.pressure_plot.tick_params(axis = "y", colors = "Blue")
             self.temperature_plot.tick_params(axis = "x", colors = "#e4e6eb")
             ##Sets the label and units for y-axis and x-axis of graph
-            self.pressure_plot.set_ylabel("Temperature (°C)", color = "Red")
-            self.temperature_plot.set_ylabel("Pressure (Psi)", color = "Blue")
+            self.temperature_plot.set_ylabel("Temperature (°C)", color = "Red")
+            self.pressure_plot.set_ylabel("Pressure (Psi)", color = "Blue")
             self.temperature_plot.set_xlabel("Time (s)", color = "#E4E6EB")
             self.temperature_plot.set_title("Lets Boil a Computer, Again!", color = "#ffffff",  fontsize = 30, fontweight = 20)
         
@@ -215,12 +215,12 @@ class GUI:
         self.pressure.append(newPressure)
         self.xtime.append(newTime)       
         ##Plots the temperature and pressure with the correct x axis.
-        self.pressure_plot.plot(self.xtime, self.pressure, color = "red")
-        self.temperature_plot.plot(self.xtime, self.temperature, color = "blue")
+        self.pressure_plot.plot(self.xtime, self.pressure, color = "blue")
+        self.temperature_plot.plot(self.xtime, self.temperature, color = "red")
         self.temperature_plot.set_xlim(self.xtime[0],self.xtime[-1], 1) 
         ##Sets the label and units for y-axis and x-axis of graph
-        self.pressure_plot.set_ylabel("Temperature (°C)", color = 'Red')
-        self.temperature_plot.set_ylabel("Pressure (Psi)", color = "blue")
+        self.temperature_plot.set_ylabel("Temperature (°C)", color = 'Red')
+        self.pressure_plot.set_ylabel("Pressure (Psi)", color = "blue")
         self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")      
         ##Deletes and redraws the graph so that the graph looks animated and incoming data 
         #is reflected as soon as its collected.
@@ -264,6 +264,23 @@ class GUI:
         # self.pressure = new_press
         self.press_value.config(text=new_press)
         new_press = abs(new_press)
+        print(new_press)
+        if new_press >= .05 and not self.control.koolance_on:
+            self.control.koolance_on = True
+            image = Image.open("koolance-on.png").resize((172, 49))
+            self.koolance_image = ImageTk.PhotoImage(image)
+            self.koolance_image_label.destroy()
+            self.koolance_image_label = ttk.Label(
+                self.title_bar, image=self.koolance_image)
+            self.koolance_image_label.pack(side="left")
+        elif new_press < .05 and self.control.koolance_on:
+            self.control.koolance_on = False
+            image = Image.open("koolance-off.png").resize((172, 49))
+            self.koolance_image = ImageTk.PhotoImage(image)
+            self.koolance_image_label.destroy()
+            self.koolance_image_label = ttk.Label(
+                self.title_bar, image=self.koolance_image)
+            self.koolance_image_label.pack(side="left")
         if new_press > 3:
             new_press = 3
         theta = 225 - (new_press / 3) * 270
@@ -399,13 +416,16 @@ class GUI:
         delta_x = needle_length * math.cos(alpha)
         delta_y = needle_length * math.sin(alpha)
         return (100 - delta_x, 100 + delta_y)
-
+    def on_closing(self):
+        print("Close")
+        self.master.destroy()
 
 def main():
     root = Tk()
     control = None
     gui = GUI(root, control)
     root.state('zoomed')
+    root.protocol("WM_DELETE_WINDOW", gui.on_closing)
     root.mainloop()
 
 

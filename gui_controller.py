@@ -5,6 +5,7 @@ import serial.tools.list_ports
 from datetime import datetime
 from tkinter import Tk
 from gui import GUI
+import pandas as pd
 
 
 class Control():
@@ -13,11 +14,16 @@ class Control():
         self.time_start = 0
         self.time_duration = 0
         self.pump_on = False
+        self.koolance_on = False
         self.override = False
+        self.running = True
+        self.data = []
+
     def set_gui(self, gui):
         self.gui = gui
+
     def manage_input(self):
-        while True:
+        while self.running:
             # Receive data from the Arduino
             receive_string = self.arduino.readline().decode('utf-8').rstrip()
             time.sleep(.1)
@@ -39,10 +45,15 @@ class Control():
                 self.gui.set_flow_rate(flow_rate)
                 self.gui.set_fluid_level(fluid_level)
                 self.gui.set_graph(pressure_diff, temperature, timestamp)
+                self.data.append([timestamp] + line_split)
+
+        data_frame = pd.DataFrame(self.data, columns=[
+                                  "Timestamp", "Temperature", "Pressure Inside", "Pressure Outside", "Flow Rate", "Fluid Level"])
+        data_frame.to_csv("data.csv")
 
     def toggle_override(self):
         self.override = not self.override
-    
+
     def toggle_pump(self):
         print("Toggle Pump")
         code = "FILTER"
@@ -54,6 +65,11 @@ class Control():
         self.time_start = time_start
         self.time_duration = time_duration
 
+    def on_closing(self):
+        print("Close")
+        self.running = False
+        self.master.destroy()
+
     def check_pump(self):
         minute = datetime.now().minute
         if self.time_duration > 0:
@@ -62,6 +78,7 @@ class Control():
                     self.toggle_pump()
             elif minute < self.time_start or minute >= self.time_start + self.time_duration:
                 self.toggle_pump()
+
 
 def main():
     ports = [comport.device for comport in serial.tools.list_ports.comports()]
@@ -72,8 +89,10 @@ def main():
     control = Control(arduino)
     gui = GUI(root, control)
     control.set_gui(gui)
+    root.protocol("WM_DELETE_WINDOW", gui.on_closing)
     thread1 = threading.Thread(target=control.manage_input)
     thread1.start()
+    
     root.mainloop()
     thread1.join()
 

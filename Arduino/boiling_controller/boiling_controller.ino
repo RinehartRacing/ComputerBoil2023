@@ -132,7 +132,7 @@ void loop() {
   packet += "FR " + String(flowRate, 2) + " ";
   packet += "FL " + (String)length;
   Serial.println(packet);
-  if ((pressure1 - pressure2) > 2.5) {
+  if ((pressure1 - pressure2) > 1.5) {
     digitalWrite(solenoidRelay, HIGH);
   } else {
     digitalWrite(solenoidRelay, LOW);
