@@ -23,6 +23,8 @@ class Control():
         self.gui = gui
 
     def manage_input(self):
+        file_out = open("data.csv", "w")
+        file_out.write("Timestamp, Temperature, Pressure In, Pressure Out, Pressure Differential, Flow Rate, Fluid Level\n")
         while self.running:
             # Receive data from the Arduino
             receive_string = self.arduino.readline().decode('utf-8').rstrip()
@@ -38,7 +40,8 @@ class Control():
                 pressure_out = float(line_split[5])
                 pressure_diff = round(pressure_in - pressure_out, 2)
                 flow_rate = float(line_split[7])
-                fluid_level = float(line_split[9])
+                # fluid_level = float(line_split[9])
+                fluid_level = float(22)
                 timestamp = datetime.now()
                 self.gui.set_temperature(temperature)
                 self.gui.set_pump_pressure(pressure_diff)
@@ -46,10 +49,10 @@ class Control():
                 self.gui.set_fluid_level(fluid_level)
                 self.gui.set_graph(pressure_diff, temperature, timestamp)
                 self.data.append([timestamp] + line_split)
+                line = f"{timestamp}, {temperature}, {pressure_in}, {pressure_out}, {pressure_diff}, {flow_rate}, {fluid_level}\n"
+                file_out.write(line)
+                file_out.flush()
 
-        data_frame = pd.DataFrame(self.data, columns=[
-                                  "Timestamp", "Temperature", "Pressure Inside", "Pressure Outside", "Flow Rate", "Fluid Level"])
-        data_frame.to_csv("data.csv")
 
     def toggle_override(self):
         self.override = not self.override

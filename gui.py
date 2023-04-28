@@ -224,7 +224,7 @@ class GUI:
         self.temperature_plot.set_xlabel("Time Samples at 10 Hz", color = "#E4E6EB")      
         ##Deletes and redraws the graph so that the graph looks animated and incoming data 
         #is reflected as soon as its collected.
-        self.graph_canvas.draw()
+        self.graph_canvas.draw_idle()
         self.graph_canvas.flush_events()
 
     def draw_pump_gauge(self):
