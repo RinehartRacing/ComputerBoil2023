@@ -1,11 +1,7 @@
 """
-    Engineering 498
-    Let's Boil a Computer
-    Rusty Rinehart
-    Chris Bremser
-    Jesus Arias
-    Prasanna Raut
-    Sean Brown
+    Team 23016 - Let's Boil a Computer Again!
+    Rusty Rinehart, Jesus Arias, Chris Bremser, Prasanna Raut, Sean Brown
+    This file is responsible for creating the Tkinter GUI
 """
 #Dark Mode Hex Colors
 #18191a background black

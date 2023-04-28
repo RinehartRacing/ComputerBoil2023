@@ -1,6 +1,11 @@
 from tkinter import Button, Image, ttk
 import tkinter as tk
 from PIL import Image, ImageTk
+"""
+    Team 23016 - Let's Boil a Computer Again!
+    Rusty Rinehart, Jesus Arias, Chris Bremser, Prasanna Raut, Sean Brown
+    This file is responsible for creating the Tkinter Settings Menu
+"""
 class Settings():
     def __init__(self, master, gui):
         self.master = master
@@ -42,10 +47,12 @@ class Settings():
         self.apply_button.pack()
 
     def apply_settings(self):
+        """This method tells GUI that apply button has been clicked"""
         print("Applying Settings")
         self.apply_button.config(state="disabled")
         self.gui.apply_settings(self.time_start.get(), self.time_duration.get())
     def check_time_start(self, value):
+        """ This method ensures that inputted start time of pump is within the correct range"""
         if not value.isdigit():
             self.time_start.set(0)
         else:
@@ -56,6 +63,7 @@ class Settings():
         self.apply_button.config(state="normal")
         return False
     def check_time_duration(self, value):
+        """This method ensures that inputted duration is within the correct range of 0-10"""
         if not value.isdigit():
             self.time_duration.set(0)
         else:
